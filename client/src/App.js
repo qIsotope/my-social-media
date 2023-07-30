@@ -31,7 +31,6 @@ function App() {
 			socket.emit('add-user', user._id)
 		}
 		return () => {
-			console.log('return')
 			socket.emit('remove-user', user._id)
 		}
 	}, [user])

@@ -16,7 +16,6 @@ const commentsApi = api.injectEndpoints({
 					dispatch(
 						postsApi.util.updateQueryData('getPosts', undefined, (draft) => {
 							const neededPost = draft.find(post => post._id === updatedComment.postId);
-							console.log(neededPost, current(draft), updatedComment.postId);
 							if (parentCommentId) {
 								const parentComment = neededPost.comments.find(comm => comm._id === parentCommentId);
 								const likedUnlikedComment = parentComment.comments.find(comm => comm._id === commentId);

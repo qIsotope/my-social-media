@@ -37,7 +37,6 @@ export const PostWidget = ({
 	const primary = palette.primary.main;
 	const isLiked = likes.includes(user._id);
 	const likesCount = likes.length;
-
 	const commentsLength = useMemo(() => comments.reduce((acc, comm) => {
 		return acc + comm.comments.length
 	}, 0) + comments.length, [comments])
@@ -111,13 +110,12 @@ export const PostWidget = ({
 								<Typography>{commentsLength}</Typography>
 							</FlexBetween>
 						</FlexBetween>
-
 						<IconButton>
 							<ShareOutlined />
 						</IconButton>
 					</FlexBetween>
 					{!!comments.length && <CommentsWidget comments={comments} postUserId={postUserId} postId={postId} />}
-					{!!comments.length && <CreateCommentWidget postId={postId} postUserId={postUserId} />}
+					{(!!comments.length || !showComments) && <CreateCommentWidget postId={postId} postUserId={postUserId} />}
 				</>}
 		</WidgetWrapper>
 	)

@@ -6,7 +6,6 @@ import { CommentWidget } from './CommentWidget';
 export const ChildCommentsWidget = ({ comments, postUserId, postId, commentInfo }) => {
 	const [childCommentInfo, setChildCommentInfo] = useState(null)
 	useEffect(() => setChildCommentInfo(commentInfo), [commentInfo])
-
 	return (
 		<Box mb={!!commentInfo && "20px"} textAlign="right" display="flex" alignItems="flex-end" ml="40px">
 			<Box width="100%" mt={comments.length && "10px"} mb={comments.length && "10px"} textAlign="left">
@@ -48,7 +47,8 @@ export const ChildCommentsWidget = ({ comments, postUserId, postId, commentInfo 
 					)
 				)}
 				{!!childCommentInfo &&
-					<CreateCommentWidget parentCommentId={childCommentInfo.parentCommentId} name={childCommentInfo.name} id={childCommentInfo.id} postUserId={postUserId} postId={postId} />}
+					<CreateCommentWidget autofocus parentCommentId={childCommentInfo.parentCommentId} 
+					name={childCommentInfo.name} id={childCommentInfo.id} postUserId={postUserId} postId={postId} />}
 			</Box>
 		</Box>
 	);

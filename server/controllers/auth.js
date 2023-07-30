@@ -7,8 +7,8 @@ export const authMe = async (req, res) => {
 	try {
 		const { id } = req.id;
 		const user = await User.findById(id).populate('friends').exec();
-		const savedUser = await user.save()
 		if (!user) return res.status(405).json({ msg: 'User not found' });
+		const savedUser = await user.save()
 		return res.status(200).json({ user: savedUser });
 	}
 	catch (err) {

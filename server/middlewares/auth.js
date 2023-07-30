@@ -20,7 +20,6 @@ export const checkAuth = (req, res, next) => {
 		if (!verified) {
 			return res.status(405).json({ msg: 'Invalid token' })
 		}
-
 		req.id = verified;
 		next()
 	} catch (error) {

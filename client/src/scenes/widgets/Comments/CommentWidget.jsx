@@ -34,7 +34,7 @@ export const CommentWidget = ({
 	const formattedDate = `${moment(createdAt).format('DD MMM')} at ${moment(createdAt).format('LT')}`
 	const { palette } = useTheme()
 	const { user } = useSelector(state => state.auth);
-	const isLiked = likes.includes(user._id)
+	const isLiked = likes.includes(user._id)	
 	const [likeUnlikeComment] = useLikeDislikeCommentMutation();
 	const likeComment = () => {
 		likeUnlikeComment({ commentId: id, postUserId, postId, parentCommentId })

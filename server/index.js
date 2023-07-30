@@ -55,13 +55,14 @@ app.get('/search/users/:query?', checkAuth, getUsersBySearchQuery);
 app.post('/users/:id/:friendId', checkAuth, addRemoveFriend);
 
 app.post('/posts', upload.single("picture"), createPost);
-app.get('/posts', getPosts);
+app.get('/posts', checkAuth, getPosts);
 app.delete('/posts/:id', checkAuth, softDeletePost);
 app.get('/posts/:userId', checkAuth, getUserPosts);
 app.patch('/posts/likes/:postId', checkAuth, addRemoveLike);
 
 // comments
 app.post('/comments', upload.single("picture"), createComment);
+app.delete('/comments', createComment);
 app.patch('/comments/likes/:commentId', checkAuth, addRemoveCommentLike);
 
 

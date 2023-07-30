@@ -5,11 +5,12 @@ import {
 } from "@mui/icons-material";
 import FlexBetween from 'components/FlexBetween'
 import UserImage from 'components/UserImage'
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { useSelector } from 'react-redux';
 import { useCreateCommentMutation } from 'state/service/commentsApi';
 
-export const CreateCommentWidget = ({ postId, parentCommentId, postUserId, name, id }) => {
+export const CreateCommentWidget = ({ postId, parentCommentId, postUserId, name, id, autofocus }) => {
+	console.log(autofocus);
 	const { palette } = useTheme()
 	const { user } = useSelector((state) => state.auth)
 	const [recipient, setRecipient] = useState('')
@@ -46,6 +47,7 @@ export const CreateCommentWidget = ({ postId, parentCommentId, postUserId, name,
 						width="90%"
 					>
 						<InputBase
+							autoFocus={autofocus}
 							multiline
 							fullWidth
 							value={recipient + value}

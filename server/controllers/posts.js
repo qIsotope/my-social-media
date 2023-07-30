@@ -14,7 +14,10 @@ export const createPost = async (req, res) => {
 			userPicturePath: user.picturePath,
 			picturePath,
 			likes: [],
-			comments: [],
+			comments: {
+				postComments: [],
+				commentComments: [],
+			},
 		});
 
 		const savedPost = await post.save()
@@ -29,16 +32,17 @@ export const softDeletePost = async (req, res) => {
 		const { id } = req.params;
 		const post = await Post.findById(id);
 		post.isDeleted = !post.isDeleted;
+		console.log(post.comments)
 		await post.save()
 		res.status(200).json(post);
 	} catch (err) {
-		res.status(404).json({ message: err.message });
+		res.status(404).json({ message: err });
 	}
 }
 
 export const getPosts = async (req, res) => {
 	try {
-		const posts = await Post.find({ isDeleted: false }).sort({ createdAt: -1 }).populate('comments').exec()
+		const posts = await Post.find({ isDeleted: false }).sort({ createdAt: -1 }).populate(['comments.postComments', 'comments.commentComments.comment']).exec()
 		res.status(200).json(posts);
 	} catch (err) {
 		res.status(404).json({ message: err.message });
@@ -48,7 +52,7 @@ export const getPosts = async (req, res) => {
 export const getUserPosts = async (req, res) => {
 	try {
 		const { userId } = req.params;
-		const post = await Post.find({ userId, isDeleted: false }).populate('comments').exec();
+		const post = await Post.find({ userId, isDeleted: false }).populate(['comments.postComments', 'comments.commentComments.comment']).exec()
 		res.status(200).json(post);
 	} catch (err) {
 		res.status(404).json({ message: err.message });

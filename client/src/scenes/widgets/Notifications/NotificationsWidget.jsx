@@ -9,7 +9,6 @@ import UserImage from 'components/UserImage';
 import { socket } from 'socket';
 
 const getformattedNotification = (notification) => {
-	console.log(notification);
 	if (!notification) return {}
 	switch (notification.type) {
 		case 'friendRequest':
@@ -29,7 +28,6 @@ export const NotificationsWidget = () => {
 
 	useEffect(() => {
 		socket.on('notification', (body) => {
-			console.log(body);
 			setNotification(getformattedNotification(body))
 		});
 	}, [socket])

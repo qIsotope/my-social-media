@@ -191,29 +191,9 @@ export const posts = [
 			userIds[3],
 			userIds[4],
 		],
-		comments: [{
-			_id: commentIds[0],
-			firstName: 'Jessica',
-			lastName: 'Dunn',
-			userId: userIds[7],
-			postId: postIds[1],
-			parentCommentId: undefined,
-			text: "random comment",
-			userPicturePath: 'p9.jpeg',
-			picturePath: 'p9.jpeg',
-			impressions: [userIds[2], userIds[3]],
-		},
-		{
-			_id: commentIds[1],
-			firstName: 'Steve',
-			lastName: 'Ralph',
-			userId: userIds[1],
-			postId: postIds[1],
-			parentCommentId: undefined,
-			text: "another random comment",
-			userPicturePath: 'p3.jpeg',
-			impressions: [userIds[0], userIds[5]],
-		},]
+		comments: {
+			postComments:  [commentIds[0], commentIds[1]],
+		}
 	},
 	{
 		_id: postIds[2],
@@ -232,28 +212,9 @@ export const posts = [
 			userIds[1],
 			userIds[2],
 		],
-		comments: [{
-			_id: commentIds[2],
-			firstName: 'Jessica',
-			lastName: 'Dunn',
-			userId: userIds[7],
-			postId: postIds[2],
-			parentCommentId: undefined,
-			text: "random comment",
-			userPicturePath: 'p9.jpeg',
-			impressions: [userIds[2], userIds[3]],
-		},
-		{
-			_id: commentIds[3],
-			firstName: 'Steve',
-			lastName: 'Ralph',
-			userId: userIds[1],
-			postId: postIds[2],
-			parentCommentId: undefined,
-			text: "another random comment",
-			userPicturePath: 'p3.jpeg',
-			impressions: [userIds[0], userIds[5]],
-		},]
+		comments: {
+			postComments:  [commentIds[2], commentIds[3]],
+		}
 	},
 	{
 		_id: postIds[3],
@@ -272,28 +233,9 @@ export const posts = [
 			userIds[3],
 			userIds[5],
 		],
-		comments: [{
-			_id: commentIds[4],
-			firstName: 'Jessica',
-			lastName: 'Dunn',
-			userId: userIds[7],
-			postId: postIds[3],
-			parentCommentId: undefined,
-			text: "random comment",
-			userPicturePath: 'p9.jpeg',
-			impressions: [userIds[2], userIds[3]],
-		},
-		{
-			_id: commentIds[5],
-			firstName: 'Steve',
-			lastName: 'Ralph',
-			userId: userIds[1],
-			postId: postIds[3],
-			parentCommentId: undefined,
-			text: "another random comment",
-			userPicturePath: 'p3.jpeg',
-			impressions: [userIds[0], userIds[5]],
-		},]
+		comments: {
+			postComments:  [commentIds[4], commentIds[5]],
+		}
 	},
 	{
 		_id: postIds[4],
@@ -311,28 +253,9 @@ export const posts = [
 			userIds[6],
 			userIds[3],
 		],
-		comments: [{
-			_id: commentIds[6],
-			firstName: 'Jessica',
-			lastName: 'Dunn',
-			userId: userIds[7],
-			postId: postIds[4],
-			parentCommentId: undefined,
-			text: "random comment",
-			userPicturePath: 'p9.jpeg',
-			impressions: [userIds[2], userIds[3]],
-		},
-		{
-			_id: commentIds[7],
-			firstName: 'Steve',
-			lastName: 'Ralph',
-			userId: userIds[1],
-			postId: postIds[4],
-			parentCommentId: undefined,
-			text: "another random comment",
-			userPicturePath: 'p3.jpeg',
-			impressions: [userIds[0], userIds[5]],
-		},]
+		comments: {
+			postComments:  [commentIds[6], commentIds[7]],
+		}
 	},
 	{
 		_id: postIds[5],
@@ -351,28 +274,9 @@ export const posts = [
 			userIds[5],
 			userIds[7],
 		],
-		comments: [{
-			_id: commentIds[8],
-			firstName: 'Jessica',
-			lastName: 'Dunn',
-			userId: userIds[7],
-			postId: postIds[5],
-			parentCommentId: undefined,
-			text: "random comment",
-			userPicturePath: 'p9.jpeg',
-			impressions: [userIds[2], userIds[3]],
-		},
-		{
-			_id: commentIds[9],
-			firstName: 'Steve',
-			lastName: 'Ralph',
-			userId: userIds[1],
-			postId: postIds[5],
-			parentCommentId: undefined,
-			text: "another random comment",
-			userPicturePath: 'p3.jpeg',
-			impressions: [userIds[0], userIds[5]],
-		},]
+		comments: {
+			postComments:  [commentIds[8], commentIds[9]],
+		}
 	},
 	{
 		_id: postIds[6],
@@ -389,28 +293,9 @@ export const posts = [
 			userIds[1],
 			userIds[2],
 		],
-		comments: [{
-			_id: commentIds[10],
-			firstName: 'Some',
-			lastName: 'Guy',
-			userId: userIds[2],
-			postId: postIds[0],
-			parentCommentId: undefined,
-			text: "random comment",
-			userPicturePath: 'p4.jpeg',
-			impressions: [userIds[2], userIds[3]],
-		},
-		{
-			_id: commentIds[11],
-			firstName: 'test',
-			lastName: 'me',
-			userId: userIds[0],
-			postId: postIds[0],
-			parentCommentId: undefined,
-			text: "another random comment",
-			userPicturePath: 'p11.jpeg',
-			impressions: [userIds[0], userIds[5]],
-		}]
+		comments: {
+			postComments:  [commentIds[10], commentIds[11]],
+		}
 	},
 ];
 

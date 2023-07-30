@@ -3,7 +3,19 @@ import { api } from './api'
 export const postsApi = api.injectEndpoints({
 	endpoints: (build) => ({
 		getPosts: build.query({
-			query: (id) => id ? `posts/${id}` : 'posts'
+			query: (id) => id ? `posts/${id}` : 'posts',
+			transformResponse: (response) => {
+				response.forEach(post => {
+					const comments = [];
+					post.comments.postComments.forEach(comment => {
+						const childrenComments = post.comments.commentComments.filter(comm => comm.postCommentId === comment._id).map(comm => comm.comment);
+						comment.comments = childrenComments
+						comments.push(comment);
+					})
+					post.comments = comments
+				})
+				return response
+			}
 		}),
 		deletePost: build.mutation({
 			query: (id) => ({
@@ -22,7 +34,11 @@ export const postsApi = api.injectEndpoints({
 					const { data: createdPost } = await queryFulfilled
 					dispatch(
 						postsApi.util.updateQueryData('getPosts', undefined, (draft) => {
-							draft?.unshift(createdPost);
+							const newPost = {
+								...createdPost,
+								comments: [],
+							}
+							draft?.unshift(newPost);
 						}
 						))
 				}

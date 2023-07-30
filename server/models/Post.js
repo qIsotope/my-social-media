@@ -22,12 +22,28 @@ const PostSchema = mongoose.Schema({
 		type: String,
 		default: "",
 	},
-	userId: String,
+	userId: {
+		type: mongoose.Schema.Types.ObjectId,
+		ref: 'User',
+	},
 	likes: {
 		type: Array,
 		default: [],
 	},
-	comments: [Comment.schema],
+	comments: {
+		postComments: [{
+			type: mongoose.Schema.Types.ObjectId,
+			ref: 'Comment',
+			default: [],
+		}],
+		commentComments: [{
+			postCommentId: mongoose.Schema.Types.ObjectId,
+			comment: {
+				type: mongoose.Schema.Types.ObjectId,
+				ref: 'Comment',
+			},
+		}]
+	},
 	isDeleted: {
 		type: Boolean,
 		default: false,

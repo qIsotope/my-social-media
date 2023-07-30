@@ -6,30 +6,8 @@ export const addRemoveLike = async (req, res) => {
 	try {
 		const { commentId } = req.params;
 		const { id } = req.id;
-		const { postId, parentCommentId } = req.body;
 
-		const post = await Post.findById(postId);
 		const comment = await Comment.findById(commentId);
-
-		const updateLikes = (comm, liked) => {
-			return {
-				...comm,
-				likes: liked ? comm.likes.filter(like => like !== id) : [...comm.likes, id]
-			}
-		};
-
-		if (parentCommentId) {
-			post.comments = post.comments.map(comm =>
-				comm._id.toString() === parentCommentId
-					? { ...comm, comments: comm.comments.map(childComm => (childComm._id.toString() === commentId ? updateLikes(childComm, childComm.likes.includes(id)) : childComm)) }
-					: comm
-			);
-		} else {
-			post.comments = post.comments.map(comm =>
-				comm._id.toString() === commentId ? updateLikes(comm, comm.likes.includes(id)) : comm
-			);
-		}
-		await post.save();
 		if (comment.likes.includes(id)) {
 			comment.likes = comment.likes.filter(like => like !== id)
 		} else {
@@ -65,13 +43,12 @@ export const createComment = async (req, res) => {
 		});
 		const savedComment = await comment.save()
 		if (parentCommentId) {
-			post.comments = post.comments.map(comm =>
-				comm._id.toString() === parentCommentId
-					? { ...comm, comments: [...comm.comments, savedComment] }
-					: comm
-			);
+			post.comments.commentComments.push({
+				postCommentId: parentCommentId,
+				comment: savedComment._id
+			})
 		} else {
-			post.comments.push(savedComment)
+			post.comments.postComments.push(savedComment._id)
 		}
 		await post.save()
 		res.status(200).json(savedComment);

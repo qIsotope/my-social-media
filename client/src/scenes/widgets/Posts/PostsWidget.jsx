@@ -26,7 +26,6 @@ export const PostsWidget = () => {
 			}
 		}
 	}, [id, posts])
-
 	return (
 		<>
 			{posts?.map(

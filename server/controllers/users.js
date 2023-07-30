@@ -50,7 +50,6 @@ export const addRemoveFriend = async (req, res) => {
 		})
 
 		const savedNotification = await notification.save()
-		console.log(onlineUsers.get(friendId), onlineUsers.get(id))
 		io.to(onlineUsers.get(friendId)).emit('notification', savedNotification)
 		await user.save();
 		await friend.save();
