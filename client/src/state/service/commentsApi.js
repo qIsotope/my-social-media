@@ -81,6 +81,26 @@ const commentsApi = api.injectEndpoints({
 					console.log(e);
 				}
 			},
+		}),
+		deleteComment: build.mutation({
+			query: (id) => ({
+				url: '/comments/' + id,
+				method: 'DELETE',
+			}),
+		}),
+		updateComment: build.mutation({
+			query: ({id, body}) => ({
+				url: '/comments/'+ id,
+				method: 'PATCH',
+				body
+			}),
+		}),
+		deleteThread: build.mutation({
+			query: (ids) => ({
+				url: '/threads',
+				method: 'DELETE',
+				body: { ids }
+			})
 		})
 	}),
 })
@@ -88,4 +108,7 @@ const commentsApi = api.injectEndpoints({
 export const {
 	useLikeDislikeCommentMutation,
 	useCreateCommentMutation,
+	useDeleteCommentMutation,
+	useDeleteThreadMutation,
+	useUpdateCommentMutation
 } = commentsApi;

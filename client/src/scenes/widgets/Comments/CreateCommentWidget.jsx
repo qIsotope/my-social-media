@@ -9,30 +9,41 @@ import React, { useEffect, useRef, useState } from 'react'
 import { useSelector } from 'react-redux';
 import { useCreateCommentMutation } from 'state/service/commentsApi';
 
-export const CreateCommentWidget = ({ postId, parentCommentId, postUserId, name, id, autofocus }) => {
-	console.log(autofocus);
+export const CreateCommentWidget = ({ postId, parentCommentId, postUserId, name, repliedToId, autofocus, resetCommentInfo }) => {
 	const { palette } = useTheme()
 	const { user } = useSelector((state) => state.auth)
+
 	const [recipient, setRecipient] = useState('')
 	const [value, setValue] = useState('')
 	const [createComment] = useCreateCommentMutation()
-	const firstName = name?.split(' ')[0];
+	useEffect(() => {})
+
 	useEffect(() => {
+		const firstName = name?.split(' ')[0];
 		setRecipient(firstName ? firstName + ', ' : '')
-	}, [firstName])
+		setValue(firstName ? firstName + ', ' : '')
+	}, [name])
+
+	const haveRecipient = value.startsWith(recipient) ||  recipient.slice(0, -1)
 	const sendComment = () => {
+		if (!value.replace(recipient, '').length) {
+			return
+		}
 		const body = {
 			userId: user._id,
 			postId,
 			text: value,
 			parentCommentId,
-			repliedToName: recipient,
-			repliedToId: id,
+			repliedToName: haveRecipient && recipient,
+			repliedToId: haveRecipient && repliedToId
 			// picturePath, todo
 		}
 		createComment({ body, postUserId, parentCommentId })
 		setValue('');
+		setRecipient('');
+		name && resetCommentInfo(null)
 	}
+
 	return (
 		<>
 			<FlexBetween width="100%" mt="20px" mb="10px">
@@ -50,14 +61,15 @@ export const CreateCommentWidget = ({ postId, parentCommentId, postUserId, name,
 							autoFocus={autofocus}
 							multiline
 							fullWidth
-							value={recipient + value}
-							onChange={(e) => setValue(e.target.value.replace(recipient, ''))}
+							value={value}
+							onChange={(e) => setValue(e.target.value)}
 							placeholder='Leave a comment...'
 							endAdornment={<InputAdornment position="end"><AttachFile sx={{ cursor: 'pointer', color: palette.neutral.medium, '&:hover': { color: palette.neutral.main } }} /></InputAdornment>}
 						/>
 					</FlexBetween>
 				</Box>
-				<Send onClick={() => sendComment()} sx={{ cursor: 'pointer', color: palette.neutral.medium, '&:hover': { color: palette.neutral.main } }} />
+				<Send onClick={() => sendComment()} 
+				sx={{ cursor: 'pointer', color: palette.neutral.medium, '&:hover': { color: !!value.replace(recipient, '').length && palette.neutral.main } }} />
 			</FlexBetween>
 			<Divider />
 		</>

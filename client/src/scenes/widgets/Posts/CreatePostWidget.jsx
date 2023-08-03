@@ -1,6 +1,5 @@
-import React, { useState } from 'react'
-import { useSelector, useDispatch } from 'react-redux'
-import Dropzone from "react-dropzone";
+import React, { useRef, useState } from 'react'
+import { useSelector } from 'react-redux'
 import {
 	Box,
 	Typography,
@@ -8,6 +7,8 @@ import {
 	Divider,
 	InputBase,
 	Button,
+	LinearProgress,
+	Tooltip,
 } from "@mui/material";
 import {
 	EditOutlined,
@@ -15,19 +16,29 @@ import {
 	GifBoxOutlined,
 	ImageOutlined,
 	MicOutlined,
+	Close,
 } from "@mui/icons-material";
+import { storage } from 'firebase.js'
+import { v4 } from 'uuid'
+import { ref, uploadBytesResumable, getDownloadURL, deleteObject } from 'firebase/storage'
 
 import FlexBetween from 'components/FlexBetween';
 import WidgetWrapper from 'components/WidgetWrapper';
 import UserImage from 'components/UserImage';
 import { useCreatePostMutation } from 'state/service/postsApi';
+import { ImageModal } from 'components/ImageModal';
 
 const CreatePostWidget = () => {
 	const { user } = useSelector(state => state.auth)
-	const [createPost, {isLoading, isFetching}] = useCreatePostMutation()
-	const [isAttachFile, setIsAttachFile] = useState(false);
-	const [picture, setPicture] = useState(null)
+
+	const [createPost, { isLoading, isFetching }] = useCreatePostMutation()
+	const [isUploading, setIsUploading] = useState(false)
+	const [uploadImagePath, setUploadImagePath] = useState('')
+	const [openModal, setOpenModal] = useState(false)
+	const [pictureURL, setPictureURL] = useState(null);
 	const [description, setDescription] = useState('')
+	const inputFileRef = useRef(null)
+
 	const theme = useTheme();
 	const medium = theme.palette.neutral.medium;
 	const mediumMain = theme.palette.neutral.mediumMain;
@@ -35,13 +46,44 @@ const CreatePostWidget = () => {
 	const sendPost = () => {
 		const formData = new FormData();
 		formData.append('description', description);
-		formData.append('picture', picture);
 		formData.append('userId', user._id)
-		formData.append('picturePath', picture ? picture.name : '')
-		setPicture(null)
+		formData.append('picturePath', pictureURL ? pictureURL : '')
+		setPictureURL(null)
 		setDescription('')
-		setIsAttachFile(false)
 		createPost(formData);
+	}
+
+	const handleUpload = (picture) => {
+		if (picture) {
+			const path = `preview/${picture.name}.${v4()}`
+			setUploadImagePath(path)
+			const imageRef = ref(storage, path);
+			const uploadTask = uploadBytesResumable(imageRef, picture);
+			uploadTask.on(
+				'state_changed',
+				() => {
+					setPictureURL(null);
+					setIsUploading(true)
+				},
+				(error) => {
+					console.error(error);
+				},
+				() => {
+					getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+						setPictureURL(downloadURL);
+						setIsUploading(false)
+					});
+				}
+			);
+		}
+	};
+
+	const handleRemovePhoto = (e) => {
+		e.stopPropagation()
+		const desertRef = ref(storage, uploadImagePath);
+		setPictureURL(null)
+		setUploadImagePath('')
+		deleteObject(desertRef);
 	}
 	return (
 		<WidgetWrapper>
@@ -59,46 +101,20 @@ const CreatePostWidget = () => {
 					}}
 				/>
 			</FlexBetween>
-			{isAttachFile && (
-				<Box
-					border={`1px solid ${medium}`}
-					borderRadius="5px"
-					mt="1rem"
-					p="1rem"
-				>
-					<Dropzone
-						acceptedFiles=".jpg,.jpeg,.png"
-						multiple={false}
-						onDrop={(acceptedFiles) => setPicture(acceptedFiles[0])}
-					>
-						{({ getRootProps, getInputProps }) => (
-							<FlexBetween>
-								<Box
-									{...getRootProps()}
-									border={`2px dashed ${theme.palette.primary.main}`}
-									p="1rem"
-									width="100%"
-									sx={{ "&:hover": { cursor: "pointer" } }}
-								>
-									<input {...getInputProps()} />
-									{!picture ? (
-										<p>Add Image Here</p>
-									) : (
-										<FlexBetween>
-											<Typography>{picture?.name}</Typography>
-											<EditOutlined />
-										</FlexBetween>
-									)}
-								</Box>
-							</FlexBetween>
-						)}
-					</Dropzone>
+			<Box onClick={() => setOpenModal(true)} mt="20px" width="65%" sx={{ cursor: 'pointer' }} >
+				<Box position="relative">
+					<Box position="absolute" right="10px" top="10px" sx={{display: !pictureURL && 'none'}}>
+						<Tooltip title="Remove photo" placement='top'>
+							<Close onClick={(e) => handleRemovePhoto(e)} sx={{ '&:hover': { color: theme.palette.primary.main }, color: theme.palette.neutral.medium }} />
+						</Tooltip>
+					</Box>
+					{!!pictureURL && <img src={pictureURL} alt="post" height="100%" width='100%' />}
 				</Box>
-			)}
-
+			</Box>
+			<ImageModal open={openModal} handleClose={() => setOpenModal(false)} imageUrl={pictureURL} />
 			<Divider sx={{ margin: "1.25rem 0" }} />
 			<FlexBetween>
-				<FlexBetween gap="0.25rem" sx={{ cursor: 'pointer' }} onClick={() => setIsAttachFile(!isAttachFile)}>
+				<FlexBetween gap="0.25rem" sx={{ cursor: 'pointer' }} onClick={() => inputFileRef.current.click()}>
 					<ImageOutlined sx={{ color: mediumMain }} />
 					<Typography
 						color={mediumMain}
@@ -106,6 +122,8 @@ const CreatePostWidget = () => {
 					>
 						Image
 					</Typography>
+					<input hidden ref={inputFileRef} type='file' accept="image/png, image/jpeg, image/jpg"
+						onChange={(e) => handleUpload(e.target.files[0])} />
 				</FlexBetween>
 				<FlexBetween gap="0.25rem">
 					<GifBoxOutlined sx={{ color: mediumMain }} />
@@ -141,9 +159,9 @@ const CreatePostWidget = () => {
 						borderRadius: "3rem",
 					}}
 					onClick={sendPost}
-					disabled={isLoading || isFetching}
+					disabled={isLoading || isFetching || isUploading}
 				>
-					{(isLoading || isFetching) ? 'Loading...' : 'Post'}
+					{(isLoading || isFetching || isUploading) ? 'Loading...' : 'Post'}
 				</Button>
 			</FlexBetween>
 		</WidgetWrapper >

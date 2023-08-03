@@ -56,3 +56,45 @@ export const createComment = async (req, res) => {
 		res.status(404).json({ message: err.message });
 	}
 }
+
+export const softDeleteComment = async (req, res) => {
+	try {
+		const { id } = req.params;
+		const comment = await Comment.findById(id)
+		comment.isDeleted = !comment.isDeleted;
+		const savedComment = await comment.save()
+		res.status(200).json(savedComment);
+	} catch (err) {
+		res.status(404).json({ message: err });
+	}
+}
+
+export const softDeleteThread = async (req, res) => {
+	try {
+		const { ids } = req.body;
+		const comments = await Comment.find({ '_id': { $in: ids } });
+		const updatedComments = await comments.map(async (comment) => {
+			comment.isDeleted = !comment.isDeleted;
+			const savedComment = await comment.save();
+			return savedComment
+		})
+		res.status(200).json(updatedComments);
+	} catch (err) {
+		res.status(404).json({ message: err });
+	}
+}
+
+export const updateComment = async (req, res) => {
+	try {
+		const { text, picturePath } = req.body;
+		const { id } = req.params;
+		const comment = await Comment.findById(id);
+		comment.repliedToName = '';
+		comment.text = text;
+		const savedComment = await comment.save()
+		res.status(200).json(savedComment);
+	} catch (err) {
+		console.log(err)
+		res.status(404).json({ message: err });
+	}
+}

@@ -3,7 +3,7 @@ import { Box, IconButton, InputBase, useTheme, Popper, Typography } from '@mui/m
 import FlexBetween from 'components/FlexBetween'
 import { useDebounce } from 'hooks/useDebounce'
 import React, { useEffect, useRef, useState } from 'react'
-import { FriendListWidget } from './FriendListWidget'
+import { FriendList } from '../Friends/FriendList'
 import { useOnClickOutside } from 'hooks/useOnClickOutside'
 import WidgetWrapper from 'components/WidgetWrapper'
 import { useLocation } from 'react-router-dom'
@@ -61,7 +61,9 @@ export const SearchWidget = () => {
 							<Typography pl="20px" mb="10px" variant="h5">Who are we looking for?</Typography>
 						</WidgetWrapper>
 						: <>
-							<FriendListWidget friends={data} search loading={loading} />
+							<WidgetWrapper backgroundColor={palette.neutral.light}>
+								<FriendList friends={data} search loading={loading} title="People" />
+							</WidgetWrapper>
 						</>
 					}
 				</Box>

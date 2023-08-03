@@ -50,10 +50,9 @@ export default function Form({ setPageType, setError, setSuccess }) {
 		resolver: yupResolver(registerSchema),
 	})
 	const values = getValues();
-
+	
 	const registerUser = async (data) => {
 		await fetchRegisterUser(data);
-		// reset();
 	}
 
 	useEffect(() => {
@@ -112,7 +111,7 @@ export default function Form({ setPageType, setError, setSuccess }) {
 					p="1rem"
 				>
 					<Dropzone
-						acceptedFiles=".jpg,.jpeg,.png"
+						// acceptedFiles=".jpg,.jpeg,.png"
 						multiple={false}
 						onDrop={(acceptedFiles) => {
 							setValue("picture", acceptedFiles[0], { shouldValidate: true })

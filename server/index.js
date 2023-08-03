@@ -12,7 +12,7 @@ import { fileURLToPath } from "url";
 import { register, login, authMe } from "./controllers/auth.js";
 import { getUser, addRemoveFriend, getUsersBySearchQuery } from "./controllers/users.js";
 import { addRemoveLike, createPost, getPosts, getUserPosts, softDeletePost } from "./controllers/posts.js";
-import { addRemoveLike as addRemoveCommentLike, createComment } from "./controllers/comments.js";
+import { addRemoveLike as addRemoveCommentLike, createComment, softDeleteComment, softDeleteThread, updateComment } from "./controllers/comments.js";
 import { checkAuth } from "./middlewares/auth.js";
 import User from "./models/User.js";
 import Post from "./models/Post.js";
@@ -62,8 +62,10 @@ app.patch('/posts/likes/:postId', checkAuth, addRemoveLike);
 
 // comments
 app.post('/comments', upload.single("picture"), createComment);
-app.delete('/comments', createComment);
+app.patch('/comments/:id', upload.single("picture"), updateComment);
 app.patch('/comments/likes/:commentId', checkAuth, addRemoveCommentLike);
+app.delete('/comments/:id', checkAuth, softDeleteComment);
+app.delete('/threads', checkAuth, softDeleteThread);
 
 
 const PORT = process.env.PORT || 6001;
@@ -71,28 +73,27 @@ const PORT = process.env.PORT || 6001;
 const server = app.listen(PORT, () => console.log(`Server Port: ${PORT}`));
 
 export const io = new Server(server, {
-  cors: {
-    origin: `http://localhost:3006`,
-  },
+	cors: {
+		origin: `http://localhost:3006`,
+	},
 });
 
 global.onlineUsers = new Map()
+const activeUsers = {};
 // console.log('onlineUsers', onlineUsers)
 io.on('connection', (socket) => {
 	global.notificationSocket = socket;
 	socket.on('add-user', (userId) => {
 		onlineUsers.set(userId, socket.id)
-		// console.log('onlineUsersafter', onlineUsers)
+		console.log(onlineUsers);
+		activeUsers[userId] = socket.id;
+		socket.emit("get-users", activeUsers);
 	});
 
 	socket.on("disconnect", (message) => {
-    // console.log("User Disconnected", message);
-  });
-
-	socket.emit("get-users", onlineUsers);
+	});
 
 })
-
 /* MONGOOSE SETUP */
 mongoose
 	.connect(process.env.MONGO_URL, {

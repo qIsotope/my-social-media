@@ -18,6 +18,7 @@ export const CommentsWidget = ({ comments, postUserId, postId }) => {
 					likes,
 					createdAt,
 					parentCommentId,
+					isDeleted,
 				}) => (
 					<CommentWidget
 						key={_id}
@@ -33,6 +34,7 @@ export const CommentsWidget = ({ comments, postUserId, postId }) => {
 						postUserId={postUserId}
 						comments={comments}
 						parentCommentId={parentCommentId}
+						isDeleted={isDeleted}
 					/>
 				)
 			)}

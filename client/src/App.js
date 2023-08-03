@@ -30,9 +30,6 @@ function App() {
 		if (Object.keys(user).length) {
 			socket.emit('add-user', user._id)
 		}
-		return () => {
-			socket.emit('remove-user', user._id)
-		}
 	}, [user])
 
 	return (

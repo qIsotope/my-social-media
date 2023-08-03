@@ -11,8 +11,14 @@ export const postsApi = api.injectEndpoints({
 						const childrenComments = post.comments.commentComments.filter(comm => comm.postCommentId === comment._id).map(comm => comm.comment);
 						comment.comments = childrenComments
 						comments.push(comment);
+						if (comment.isDeleted && comment.comments.length) {
+							comment.firstName = ''
+							comment.lastName = ''
+							comment.text = 'This comment has been deleted by the user';
+							comment.userPicturePath = 'defaultUserImage.jpg';
+						}
 					})
-					post.comments = comments
+					post.comments = comments.filter(comm => !comm.isDeleted || comm.comments.length);
 				})
 				return response
 			}

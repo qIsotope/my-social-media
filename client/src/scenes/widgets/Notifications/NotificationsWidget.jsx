@@ -39,7 +39,6 @@ export const NotificationsWidget = () => {
 	// 	}
 	// }, [notification])
 	// const formattedNotification = useMemo(() => getformattedNotification(notification), [notification])
-	// console.log(formattedNotification);
 	return (
 		<WidgetWrapper width="300px" position="fixed" bottom="10px" right="30px" sx={{ visibility: notification ? 'visible' : 'hidden' }}>
 			<FlexBetween>

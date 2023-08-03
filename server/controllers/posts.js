@@ -32,7 +32,6 @@ export const softDeletePost = async (req, res) => {
 		const { id } = req.params;
 		const post = await Post.findById(id);
 		post.isDeleted = !post.isDeleted;
-		console.log(post.comments)
 		await post.save()
 		res.status(200).json(post);
 	} catch (err) {
@@ -42,8 +41,12 @@ export const softDeletePost = async (req, res) => {
 
 export const getPosts = async (req, res) => {
 	try {
-		const posts = await Post.find({ isDeleted: false }).sort({ createdAt: -1 }).populate(['comments.postComments', 'comments.commentComments.comment']).exec()
-		res.status(200).json(posts);
+		const posts = await Post.find({ isDeleted: false }).sort({ createdAt: -1 }).populate(['likes', 'comments.postComments', 'comments.commentComments.comment']).exec()
+		const filterendPosts = posts.map(post => {
+			post.comments.commentComments = post.comments.commentComments.filter((comm) => !comm.comment.isDeleted);
+			return post
+		})
+		res.status(200).json(filterendPosts);
 	} catch (err) {
 		res.status(404).json({ message: err.message });
 	}
@@ -52,7 +55,7 @@ export const getPosts = async (req, res) => {
 export const getUserPosts = async (req, res) => {
 	try {
 		const { userId } = req.params;
-		const post = await Post.find({ userId, isDeleted: false }).populate(['comments.postComments', 'comments.commentComments.comment']).exec()
+		const post = await Post.find({ userId, isDeleted: false }).populate(['likes', 'comments.postComments', 'comments.commentComments.comment']).exec()
 		res.status(200).json(post);
 	} catch (err) {
 		res.status(404).json({ message: err.message });
@@ -63,12 +66,13 @@ export const addRemoveLike = async (req, res) => {
 	try {
 		const { postId } = req.params;
 		const { id } = req.id;
-		const post = await Post.findById(postId);
-		const liked = post.likes.includes(id);
+		const user = await User.findById(id);
+		const post = await Post.findById(postId).populate('likes').exec();
+		const liked = post.likes.some(like => like._id.toString() === id);
 		if (liked) {
-			post.likes = post.likes.filter(like => like !== id)
+			post.likes = post.likes.filter(like => like._id.toString() !== id)
 		} else {
-			post.likes.push(id)
+			post.likes.push(user)
 		}
 		await post.save()
 

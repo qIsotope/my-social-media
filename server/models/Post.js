@@ -26,10 +26,10 @@ const PostSchema = mongoose.Schema({
 		type: mongoose.Schema.Types.ObjectId,
 		ref: 'User',
 	},
-	likes: {
-		type: Array,
-		default: [],
-	},
+	likes: [{
+		type: mongoose.Schema.Types.ObjectId,
+		ref: 'User',
+	}],
 	comments: {
 		postComments: [{
 			type: mongoose.Schema.Types.ObjectId,

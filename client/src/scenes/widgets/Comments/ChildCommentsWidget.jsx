@@ -48,7 +48,7 @@ export const ChildCommentsWidget = ({ comments, postUserId, postId, commentInfo 
 				)}
 				{!!childCommentInfo &&
 					<CreateCommentWidget autofocus parentCommentId={childCommentInfo.parentCommentId} 
-					name={childCommentInfo.name} id={childCommentInfo.id} postUserId={postUserId} postId={postId} />}
+					name={childCommentInfo.name} repliedToId={childCommentInfo.id} postUserId={postUserId} postId={postId} resetCommentInfo={setChildCommentInfo} />}
 			</Box>
 		</Box>
 	);

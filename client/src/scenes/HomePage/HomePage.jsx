@@ -7,7 +7,7 @@ import { useSelector } from 'react-redux'
 import Navbar from 'scenes/Navbar/Navbar';
 import UserWidget from 'scenes/widgets/User/UserWidget';
 import CreatePostWidget from 'scenes/widgets/Posts/CreatePostWidget';
-import { FriendListWidget } from 'scenes/widgets/User/FriendListWidget';
+import { FriendsListWidget } from 'scenes/widgets/Friends/FriendsListWidget';
 import { PostsWidget } from 'scenes/widgets/Posts/PostsWidget';
 
 export default function HomePage() {
@@ -31,7 +31,7 @@ export default function HomePage() {
 					<PostsWidget />
 				</Box>
 				<Box flexBasis="26%">
-					<FriendListWidget friends={user.friends} />
+					<FriendsListWidget friends={user.friends} />
 				</Box>
 			</Box>
 		</Box>
