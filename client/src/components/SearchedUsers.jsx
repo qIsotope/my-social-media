@@ -30,7 +30,7 @@ export const SearchedUsers = () => {
 			</FlexBetween>
 			<Box mb="10px" mt="10px" display="flex" gap="10px">
 				{parsedUsers.map(user =>
-					<Box width="88px" borderRadius="10px" padding="10px" sx={{ '&:hover': { backgroundColor: palette.primary.mediumLight }, cursor: "pointer" }}>
+					<Box key={user.id} width="88px" borderRadius="10px" padding="10px" sx={{ '&:hover': { backgroundColor: palette.primary.mediumLight }, cursor: "pointer" }}>
 						<Link to={`/profile/${user.id}`}>
 							<Box display="flex" flexDirection="column" alignItems="center">
 								<UserImage size="55" image={user.picturePath} />

@@ -1,5 +1,9 @@
 import Post from "../models/Post.js";
 import User from "../models/User.js";
+import Notification from "../models/Notification.js";
+import { sendNotification } from "../utils/createNotification.js";
+
+
 
 export const createPost = async (req, res) => {
 	try {
@@ -43,12 +47,23 @@ export const getPosts = async (req, res) => {
 	try {
 		const posts = await Post.find({ isDeleted: false }).sort({ createdAt: -1 }).populate(['likes', 'comments.postComments', 'comments.commentComments.comment']).exec()
 		const filterendPosts = posts.map(post => {
-			post.comments.commentComments = post.comments.commentComments.filter((comm) => !comm.comment.isDeleted);
+			post.comments.commentComments = post.comments.commentComments.filter((comm) => !comm.comment?.isDeleted);
+			post.comments.postComments = post.comments.postComments.filter((comm) => !comm.isDeleted || (comm.isDeleted && comm.comments.length));
 			return post
 		})
 		res.status(200).json(filterendPosts);
 	} catch (err) {
 		res.status(404).json({ message: err.message });
+	}
+}
+
+export const getPost = async (req, res) => {
+	const { id } = req.params
+	try {
+		const post = await Post.findById(id).populate(['likes', 'comments.postComments', 'comments.commentComments.comment']).exec()
+		res.status(200).json(post);
+	} catch (error) {
+		res.status(404).json({ message: error.message });
 	}
 }
 
@@ -68,11 +83,31 @@ export const addRemoveLike = async (req, res) => {
 		const { id } = req.id;
 		const user = await User.findById(id);
 		const post = await Post.findById(postId).populate('likes').exec();
+		const isExistingNotification = await Notification.find({ ['fromUser.id']: id, ['post.id']: post._id, type: 'postLike' });
 		const liked = post.likes.some(like => like._id.toString() === id);
 		if (liked) {
 			post.likes = post.likes.filter(like => like._id.toString() !== id)
 		} else {
 			post.likes.push(user)
+			if (!isExistingNotification.length) {
+				sendNotification({
+					user: {
+						id: post.userId,
+						name: post.firstName + ' ' + post.lastName,
+						picturePath: post.userPicturePath,
+					},
+					fromUser: {
+						id: user._id,
+						name: user.name,
+						picturePath: user.picturePath,
+					},
+					post: {
+						id: post._id,
+						picturePath: post.picturePath,
+					},
+					type: 'postLike'
+				})
+			}
 		}
 		await post.save()
 

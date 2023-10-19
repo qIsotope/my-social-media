@@ -43,7 +43,7 @@ export const users = [
 		name: "test me",
 		email: "aaaaaaa@gmail.com",
 		password: "$2b$10$dsasdgsagasda//G9JxQ4bQ8KXf4OAIe/X/AK9skyWUy",
-		picturePath: "p11.jpeg",
+		picturePath: "https://firebasestorage.googleapis.com/v0/b/my-social-media-c3987.appspot.com/o/users%2Fp11.jpeg?alt=media&token=f4c10b76-bde4-4849-9aed-909d7623e84d&_gl=1*qy4ixj*_ga*MTk4NTQ4Njk4MS4xNjk1NzI0MDk0*_ga_CW55HF8NVT*MTY5NjkzOTAwNS40LjEuMTY5Njk0NjI3My4yNC4wLjA.",
 		friends: [],
 		location: "San Fran, CA",
 		occupation: "Software Engineer",
@@ -60,7 +60,7 @@ export const users = [
 		name: "Steve Ralph",
 		email: "thataaa@gmail.com",
 		password: "$!FEAS@!O)_IDJda//G9JxQ4bQ8KXf4OAIe/X/AK9skyWUy",
-		picturePath: "p3.jpeg",
+		picturePath: "https://firebasestorage.googleapis.com/v0/b/my-social-media-c3987.appspot.com/o/users%2Fp3.jpeg?alt=media&token=43b8a095-3c02-4c4b-a8a0-ad517f8dc8a4&_gl=1*1xwgseb*_ga*MTk4NTQ4Njk4MS4xNjk1NzI0MDk0*_ga_CW55HF8NVT*MTY5NjkzOTAwNS40LjEuMTY5Njk0NjI3OC4xOS4wLjA.",
 		friends: [],
 		location: "New York, CA",
 		occupation: "Degenerate",
@@ -77,7 +77,7 @@ export const users = [
 		name: "Some Guy",
 		email: "someguy@gmail.com",
 		password: "da39a3ee5e6b4b0d3255bfef95601890afd80709",
-		picturePath: "p4.jpeg",
+		picturePath: "https://firebasestorage.googleapis.com/v0/b/my-social-media-c3987.appspot.com/o/users%2Fp4.jpeg?alt=media&token=e10907aa-5ae2-4b44-96ca-a3f087ca1f2f&_gl=1*1ghdmql*_ga*MTk4NTQ4Njk4MS4xNjk1NzI0MDk0*_ga_CW55HF8NVT*MTY5NjkzOTAwNS40LjEuMTY5Njk0NjI4MC4xNy4wLjA.",
 		friends: [],
 		location: "Canada, CA",
 		occupation: "Data Scientist Hacker",
@@ -94,7 +94,7 @@ export const users = [
 		name: "Whatcha Doing",
 		email: "whatchadoing@gmail.com",
 		password: "$2b$10$dsasdgsagasda//G9JxQ4bQ8KXf4OAIe/X/AK9skyWUy",
-		picturePath: "p6.jpeg",
+		picturePath: "https://firebasestorage.googleapis.com/v0/b/my-social-media-c3987.appspot.com/o/users%2Fp6.jpeg?alt=media&token=18b6b9b5-b951-4a86-998b-604a0bbfcce6&_gl=1*ixe6a6*_ga*MTk4NTQ4Njk4MS4xNjk1NzI0MDk0*_ga_CW55HF8NVT*MTY5NjkzOTAwNS40LjEuMTY5Njk0NjI4NC4xMy4wLjA.",
 		friends: [],
 		location: "Korea, CA",
 		occupation: "Educator",
@@ -111,7 +111,7 @@ export const users = [
 		name: "Jane Doe",
 		email: "janedoe@gmail.com",
 		password: "$2b$10$dsasdgsagasda//G9JxQ4bQ8KXf4OAIe/X/AK9skyWUy",
-		picturePath: "p5.jpeg",
+		picturePath: "https://firebasestorage.googleapis.com/v0/b/my-social-media-c3987.appspot.com/o/users%2Fp5.jpeg?alt=media&token=897008a1-8714-443d-a328-56edf614122b&_gl=1*1dmf5r0*_ga*MTk4NTQ4Njk4MS4xNjk1NzI0MDk0*_ga_CW55HF8NVT*MTY5NjkzOTAwNS40LjEuMTY5Njk0NjI4Mi4xNS4wLjA.",
 		friends: [],
 		location: "Utah, CA",
 		occupation: "Hacker",
@@ -128,7 +128,7 @@ export const users = [
 		name: "Harvey Dunn",
 		email: "harveydunn@gmail.com",
 		password: "$2b$10$dsasdgsagasda//G9JxQ4bQ8KXf4OAIe/X/AK9skyWUy",
-		picturePath: "p7.jpeg",
+		picturePath: "https://firebasestorage.googleapis.com/v0/b/my-social-media-c3987.appspot.com/o/users%2Fp7.jpeg?alt=media&token=5d600945-b180-494c-8dd2-5b223f348259&_gl=1*l111an*_ga*MTk4NTQ4Njk4MS4xNjk1NzI0MDk0*_ga_CW55HF8NVT*MTY5NjkzOTAwNS40LjEuMTY5Njk0NjI4Ni4xMS4wLjA.",
 		friends: [],
 		location: "Los Angeles, CA",
 		occupation: "Journalist",
@@ -145,7 +145,7 @@ export const users = [
 		name: "Carly Vowel",
 		email: "carlyvowel@gmail.com",
 		password: "$2b$10$dsasdgsagasda//G9JxQ4bQ8KXf4OAIe/X/AK9skyWUy",
-		picturePath: "p8.jpeg",
+		picturePath: "https://firebasestorage.googleapis.com/v0/b/my-social-media-c3987.appspot.com/o/users%2Fp8.jpeg?alt=media&token=be42af80-a0fc-4700-b942-34e9c1b98ef3&_gl=1*10bc0qy*_ga*MTk4NTQ4Njk4MS4xNjk1NzI0MDk0*_ga_CW55HF8NVT*MTY5NjkzOTAwNS40LjEuMTY5Njk0NjI4Ny4xMC4wLjA.",
 		friends: [],
 		location: "Chicago, IL",
 		occupation: "Nurse",
@@ -162,7 +162,7 @@ export const users = [
 		name: "Jessica Dunn",
 		email: "jessicadunn@gmail.com",
 		password: "$2b$10$dsasdgsagasda//G9JxQ4bQ8KXf4OAIe/X/AK9skyWUy",
-		picturePath: "p9.jpeg",
+		picturePath: "https://firebasestorage.googleapis.com/v0/b/my-social-media-c3987.appspot.com/o/users%2Fp9.jpeg?alt=media&token=94df6e3c-e1f1-42e9-9836-aabc93001f61&_gl=1*17h55ii*_ga*MTk4NTQ4Njk4MS4xNjk1NzI0MDk0*_ga_CW55HF8NVT*MTY5NjkzOTAwNS40LjEuMTY5Njk0NjI4OS44LjAuMA..",
 		friends: [],
 		location: "Washington, DC",
 		occupation: "A Student",
@@ -183,8 +183,8 @@ export const posts = [
 		name: "Steve Ralph",
 		location: "New York, CA",
 		description: "Some really long random description",
-		picturePath: "post1.jpeg",
-		userPicturePath: "p3.jpeg",
+		picturePath: "https://firebasestorage.googleapis.com/v0/b/my-social-media-c3987.appspot.com/o/posts%2Fpost1.jpeg?alt=media&token=c35f879c-8793-4862-b9cc-142b5c1204eb&_gl=1*aerkox*_ga*MTk4NTQ4Njk4MS4xNjk1NzI0MDk0*_ga_CW55HF8NVT*MTY5NjkzOTAwNS40LjEuMTY5Njk0NTM4Mi4yMy4wLjA.",
+		userPicturePath: "https://firebasestorage.googleapis.com/v0/b/my-social-media-c3987.appspot.com/o/users%2Fp3.jpeg?alt=media&token=43b8a095-3c02-4c4b-a8a0-ad517f8dc8a4&_gl=1*1xwgseb*_ga*MTk4NTQ4Njk4MS4xNjk1NzI0MDk0*_ga_CW55HF8NVT*MTY5NjkzOTAwNS40LjEuMTY5Njk0NjI3OC4xOS4wLjA.",
 		likes: [
 			userIds[0],
 			userIds[2],
@@ -192,7 +192,7 @@ export const posts = [
 			userIds[4],
 		],
 		comments: {
-			postComments:  [commentIds[0], commentIds[1]],
+			postComments: [commentIds[0], commentIds[1]],
 		}
 	},
 	{
@@ -204,8 +204,8 @@ export const posts = [
 		location: "Korea, CA",
 		description:
 			"Another really long random description. This one is longer than the previous one.",
-		picturePath: "post2.jpeg",
-		userPicturePath: "p6.jpeg",
+		picturePath: "https://firebasestorage.googleapis.com/v0/b/my-social-media-c3987.appspot.com/o/posts%2Fpost2.jpeg?alt=media&token=29b9e566-e315-4b5f-806a-8a4ee0e913db&_gl=1*1to2kck*_ga*MTk4NTQ4Njk4MS4xNjk1NzI0MDk0*_ga_CW55HF8NVT*MTY5NjkzOTAwNS40LjEuMTY5Njk0NTM4My4yMi4wLjA.",
+		userPicturePath: "https://firebasestorage.googleapis.com/v0/b/my-social-media-c3987.appspot.com/o/users%2Fp6.jpeg?alt=media&token=18b6b9b5-b951-4a86-998b-604a0bbfcce6&_gl=1*ixe6a6*_ga*MTk4NTQ4Njk4MS4xNjk1NzI0MDk0*_ga_CW55HF8NVT*MTY5NjkzOTAwNS40LjEuMTY5Njk0NjI4NC4xMy4wLjA.",
 		likes: [
 			userIds[7],
 			userIds[4],
@@ -213,7 +213,7 @@ export const posts = [
 			userIds[2],
 		],
 		comments: {
-			postComments:  [commentIds[2], commentIds[3]],
+			postComments: [commentIds[2], commentIds[3]],
 		}
 	},
 	{
@@ -225,8 +225,8 @@ export const posts = [
 		location: "Utah, CA",
 		description:
 			"This is the last really long random description. This one is longer than the previous one.",
-		picturePath: "post3.jpeg",
-		userPicturePath: "p5.jpeg",
+		picturePath: "https://firebasestorage.googleapis.com/v0/b/my-social-media-c3987.appspot.com/o/posts%2Fpost3.jpeg?alt=media&token=22be24da-36b5-49e0-a572-36ef9fc91452&_gl=1*15abrat*_ga*MTk4NTQ4Njk4MS4xNjk1NzI0MDk0*_ga_CW55HF8NVT*MTY5NjkzOTAwNS40LjEuMTY5Njk0NTM4NS4yMC4wLjA.",
+		userPicturePath: "https://firebasestorage.googleapis.com/v0/b/my-social-media-c3987.appspot.com/o/users%2Fp5.jpeg?alt=media&token=897008a1-8714-443d-a328-56edf614122b&_gl=1*1dmf5r0*_ga*MTk4NTQ4Njk4MS4xNjk1NzI0MDk0*_ga_CW55HF8NVT*MTY5NjkzOTAwNS40LjEuMTY5Njk0NjI4Mi4xNS4wLjA.",
 		likes: [
 			userIds[1],
 			userIds[6],
@@ -234,7 +234,7 @@ export const posts = [
 			userIds[5],
 		],
 		comments: {
-			postComments:  [commentIds[4], commentIds[5]],
+			postComments: [commentIds[4], commentIds[5]],
 		}
 	},
 	{
@@ -246,15 +246,15 @@ export const posts = [
 		location: "Los Angeles, CA",
 		description:
 			"This is the last really long random description. This one is longer than the previous one. Man I'm bored. I'm going to keep typing until I run out of things to say.",
-		picturePath: "post4.jpeg",
-		userPicturePath: "p7.jpeg",
+		picturePath: "https://firebasestorage.googleapis.com/v0/b/my-social-media-c3987.appspot.com/o/posts%2Fpost4.jpeg?alt=media&token=49f9ab76-34e7-4379-9302-d4b974690a1c&_gl=1*u457dp*_ga*MTk4NTQ4Njk4MS4xNjk1NzI0MDk0*_ga_CW55HF8NVT*MTY5NjkzOTAwNS40LjEuMTY5Njk0NTM4Ni4xOS4wLjA.",
+		userPicturePath: "https://firebasestorage.googleapis.com/v0/b/my-social-media-c3987.appspot.com/o/users%2Fp7.jpeg?alt=media&token=5d600945-b180-494c-8dd2-5b223f348259&_gl=1*l111an*_ga*MTk4NTQ4Njk4MS4xNjk1NzI0MDk0*_ga_CW55HF8NVT*MTY5NjkzOTAwNS40LjEuMTY5Njk0NjI4Ni4xMS4wLjA.",
 		likes: [
 			userIds[1],
 			userIds[6],
 			userIds[3],
 		],
 		comments: {
-			postComments:  [commentIds[6], commentIds[7]],
+			postComments: [commentIds[6], commentIds[7]],
 		}
 	},
 	{
@@ -266,8 +266,8 @@ export const posts = [
 		location: "Chicago, IL",
 		description:
 			"Just a short description. I'm tired of typing. I'm going to play video games now.",
-		picturePath: "post5.jpeg",
-		userPicturePath: "p8.jpeg",
+		picturePath: "https://firebasestorage.googleapis.com/v0/b/my-social-media-c3987.appspot.com/o/posts%2Fpost5.jpeg?alt=media&token=a3d22c9d-0a10-43bc-8414-c071b4bd0347&_gl=1*19yfdlk*_ga*MTk4NTQ4Njk4MS4xNjk1NzI0MDk0*_ga_CW55HF8NVT*MTY5NjkzOTAwNS40LjEuMTY5Njk0NTM4Ny4xOC4wLjA.",
+		userPicturePath: "https://firebasestorage.googleapis.com/v0/b/my-social-media-c3987.appspot.com/o/users%2Fp8.jpeg?alt=media&token=be42af80-a0fc-4700-b942-34e9c1b98ef3&_gl=1*10bc0qy*_ga*MTk4NTQ4Njk4MS4xNjk1NzI0MDk0*_ga_CW55HF8NVT*MTY5NjkzOTAwNS40LjEuMTY5Njk0NjI4Ny4xMC4wLjA.",
 		likes: [
 			userIds[1],
 			userIds[3],
@@ -275,7 +275,7 @@ export const posts = [
 			userIds[7],
 		],
 		comments: {
-			postComments:  [commentIds[8], commentIds[9]],
+			postComments: [commentIds[8], commentIds[9]],
 		}
 	},
 	{
@@ -287,14 +287,14 @@ export const posts = [
 		location: "Washington, DC",
 		description:
 			"For the last time, I'm going to play video games now. I'm tired of typing. I'm going to play video games now.",
-		picturePath: "post6.jpeg",
-		userPicturePath: "p9.jpeg",
+		picturePath: "https://firebasestorage.googleapis.com/v0/b/my-social-media-c3987.appspot.com/o/posts%2Fpost6.jpeg?alt=media&token=40f7696c-4716-42dc-98f0-12e5783e06f6&_gl=1*1yaatig*_ga*MTk4NTQ4Njk4MS4xNjk1NzI0MDk0*_ga_CW55HF8NVT*MTY5NjkzOTAwNS40LjEuMTY5Njk0NTM4OS4xNi4wLjA.",
+		userPicturePath: "https://firebasestorage.googleapis.com/v0/b/my-social-media-c3987.appspot.com/o/users%2Fp9.jpeg?alt=media&token=94df6e3c-e1f1-42e9-9836-aabc93001f61&_gl=1*17h55ii*_ga*MTk4NTQ4Njk4MS4xNjk1NzI0MDk0*_ga_CW55HF8NVT*MTY5NjkzOTAwNS40LjEuMTY5Njk0NjI4OS44LjAuMA..",
 		likes: [
 			userIds[1],
 			userIds[2],
 		],
 		comments: {
-			postComments:  [commentIds[10], commentIds[11]],
+			postComments: [commentIds[10], commentIds[11]],
 		}
 	},
 ];
@@ -308,8 +308,8 @@ export const comments = [
 		postId: postIds[1],
 		parentCommentId: undefined,
 		text: "random comment",
-		userPicturePath: 'p9.jpeg',
-		picturePath: 'p9.jpeg',
+		userPicturePath: 'https://firebasestorage.googleapis.com/v0/b/my-social-media-c3987.appspot.com/o/users%2Fp9.jpeg?alt=media&token=94df6e3c-e1f1-42e9-9836-aabc93001f61&_gl=1*17h55ii*_ga*MTk4NTQ4Njk4MS4xNjk1NzI0MDk0*_ga_CW55HF8NVT*MTY5NjkzOTAwNS40LjEuMTY5Njk0NjI4OS44LjAuMA..',
+		picturePath: 'https://firebasestorage.googleapis.com/v0/b/my-social-media-c3987.appspot.com/o/users%2Fp9.jpeg?alt=media&token=94df6e3c-e1f1-42e9-9836-aabc93001f61&_gl=1*17h55ii*_ga*MTk4NTQ4Njk4MS4xNjk1NzI0MDk0*_ga_CW55HF8NVT*MTY5NjkzOTAwNS40LjEuMTY5Njk0NjI4OS44LjAuMA..',
 		impressions: [userIds[2], userIds[3]],
 	},
 	{
@@ -320,7 +320,7 @@ export const comments = [
 		postId: postIds[1],
 		parentCommentId: undefined,
 		text: "another random comment",
-		userPicturePath: 'p3.jpeg',
+		userPicturePath: 'https://firebasestorage.googleapis.com/v0/b/my-social-media-c3987.appspot.com/o/users%2Fp3.jpeg?alt=media&token=43b8a095-3c02-4c4b-a8a0-ad517f8dc8a4&_gl=1*1xwgseb*_ga*MTk4NTQ4Njk4MS4xNjk1NzI0MDk0*_ga_CW55HF8NVT*MTY5NjkzOTAwNS40LjEuMTY5Njk0NjI3OC4xOS4wLjA.',
 		impressions: [userIds[0], userIds[5]],
 	},
 	{
@@ -331,7 +331,7 @@ export const comments = [
 		postId: postIds[2],
 		parentCommentId: undefined,
 		text: "random comment",
-		userPicturePath: 'p9.jpeg',
+		userPicturePath: 'https://firebasestorage.googleapis.com/v0/b/my-social-media-c3987.appspot.com/o/users%2Fp9.jpeg?alt=media&token=94df6e3c-e1f1-42e9-9836-aabc93001f61&_gl=1*17h55ii*_ga*MTk4NTQ4Njk4MS4xNjk1NzI0MDk0*_ga_CW55HF8NVT*MTY5NjkzOTAwNS40LjEuMTY5Njk0NjI4OS44LjAuMA..',
 		impressions: [userIds[2], userIds[3]],
 	},
 	{
@@ -342,7 +342,7 @@ export const comments = [
 		postId: postIds[2],
 		parentCommentId: undefined,
 		text: "another random comment",
-		userPicturePath: 'p3.jpeg',
+		userPicturePath: 'https://firebasestorage.googleapis.com/v0/b/my-social-media-c3987.appspot.com/o/users%2Fp3.jpeg?alt=media&token=43b8a095-3c02-4c4b-a8a0-ad517f8dc8a4&_gl=1*1xwgseb*_ga*MTk4NTQ4Njk4MS4xNjk1NzI0MDk0*_ga_CW55HF8NVT*MTY5NjkzOTAwNS40LjEuMTY5Njk0NjI3OC4xOS4wLjA.',
 		impressions: [userIds[0], userIds[5]],
 	},
 	{
@@ -353,7 +353,7 @@ export const comments = [
 		postId: postIds[3],
 		parentCommentId: undefined,
 		text: "random comment",
-		userPicturePath: 'p9.jpeg',
+		userPicturePath: 'https://firebasestorage.googleapis.com/v0/b/my-social-media-c3987.appspot.com/o/users%2Fp9.jpeg?alt=media&token=94df6e3c-e1f1-42e9-9836-aabc93001f61&_gl=1*17h55ii*_ga*MTk4NTQ4Njk4MS4xNjk1NzI0MDk0*_ga_CW55HF8NVT*MTY5NjkzOTAwNS40LjEuMTY5Njk0NjI4OS44LjAuMA..',
 		impressions: [userIds[2], userIds[3]],
 	},
 	{
@@ -364,7 +364,7 @@ export const comments = [
 		postId: postIds[3],
 		parentCommentId: undefined,
 		text: "another random comment",
-		userPicturePath: 'p3.jpeg',
+		userPicturePath: 'https://firebasestorage.googleapis.com/v0/b/my-social-media-c3987.appspot.com/o/users%2Fp3.jpeg?alt=media&token=43b8a095-3c02-4c4b-a8a0-ad517f8dc8a4&_gl=1*1xwgseb*_ga*MTk4NTQ4Njk4MS4xNjk1NzI0MDk0*_ga_CW55HF8NVT*MTY5NjkzOTAwNS40LjEuMTY5Njk0NjI3OC4xOS4wLjA.',
 		impressions: [userIds[0], userIds[5]],
 	},
 	{
@@ -375,7 +375,7 @@ export const comments = [
 		postId: postIds[4],
 		parentCommentId: undefined,
 		text: "random comment",
-		userPicturePath: 'p9.jpeg',
+		userPicturePath: 'https://firebasestorage.googleapis.com/v0/b/my-social-media-c3987.appspot.com/o/users%2Fp9.jpeg?alt=media&token=94df6e3c-e1f1-42e9-9836-aabc93001f61&_gl=1*17h55ii*_ga*MTk4NTQ4Njk4MS4xNjk1NzI0MDk0*_ga_CW55HF8NVT*MTY5NjkzOTAwNS40LjEuMTY5Njk0NjI4OS44LjAuMA.',
 		impressions: [userIds[2], userIds[3]],
 	},
 	{
@@ -386,7 +386,7 @@ export const comments = [
 		postId: postIds[4],
 		parentCommentId: undefined,
 		text: "another random comment",
-		userPicturePath: 'p3.jpeg',
+		userPicturePath: 'https://firebasestorage.googleapis.com/v0/b/my-social-media-c3987.appspot.com/o/users%2Fp3.jpeg?alt=media&token=43b8a095-3c02-4c4b-a8a0-ad517f8dc8a4&_gl=1*1xwgseb*_ga*MTk4NTQ4Njk4MS4xNjk1NzI0MDk0*_ga_CW55HF8NVT*MTY5NjkzOTAwNS40LjEuMTY5Njk0NjI3OC4xOS4wLjA.',
 		impressions: [userIds[0], userIds[5]],
 	},
 	{
@@ -397,7 +397,7 @@ export const comments = [
 		postId: postIds[5],
 		parentCommentId: undefined,
 		text: "random comment",
-		userPicturePath: 'p9.jpeg',
+		userPicturePath: 'https://firebasestorage.googleapis.com/v0/b/my-social-media-c3987.appspot.com/o/users%2Fp9.jpeg?alt=media&token=94df6e3c-e1f1-42e9-9836-aabc93001f61&_gl=1*17h55ii*_ga*MTk4NTQ4Njk4MS4xNjk1NzI0MDk0*_ga_CW55HF8NVT*MTY5NjkzOTAwNS40LjEuMTY5Njk0NjI4OS44LjAuMA..',
 		impressions: [userIds[2], userIds[3]],
 	},
 	{
@@ -408,7 +408,7 @@ export const comments = [
 		postId: postIds[5],
 		parentCommentId: undefined,
 		text: "another random comment",
-		userPicturePath: 'p3.jpeg',
+		userPicturePath: 'https://firebasestorage.googleapis.com/v0/b/my-social-media-c3987.appspot.com/o/users%2Fp3.jpeg?alt=media&token=43b8a095-3c02-4c4b-a8a0-ad517f8dc8a4&_gl=1*1xwgseb*_ga*MTk4NTQ4Njk4MS4xNjk1NzI0MDk0*_ga_CW55HF8NVT*MTY5NjkzOTAwNS40LjEuMTY5Njk0NjI3OC4xOS4wLjA.',
 		impressions: [userIds[0], userIds[5]],
 	},
 	{
@@ -419,7 +419,7 @@ export const comments = [
 		postId: postIds[0],
 		parentCommentId: undefined,
 		text: "random comment",
-		userPicturePath: 'p4.jpeg',
+		userPicturePath: 'https://firebasestorage.googleapis.com/v0/b/my-social-media-c3987.appspot.com/o/users%2Fp4.jpeg?alt=media&token=e10907aa-5ae2-4b44-96ca-a3f087ca1f2f&_gl=1*1ghdmql*_ga*MTk4NTQ4Njk4MS4xNjk1NzI0MDk0*_ga_CW55HF8NVT*MTY5NjkzOTAwNS40LjEuMTY5Njk0NjI4MC4xNy4wLjA.',
 		impressions: [userIds[2], userIds[3]],
 	},
 	{
@@ -430,7 +430,7 @@ export const comments = [
 		postId: postIds[0],
 		parentCommentId: undefined,
 		text: "another random comment",
-		userPicturePath: 'p11.jpeg',
+		userPicturePath: 'https://firebasestorage.googleapis.com/v0/b/my-social-media-c3987.appspot.com/o/users%2Fp11.jpeg?alt=media&token=f4c10b76-bde4-4849-9aed-909d7623e84d&_gl=1*qy4ixj*_ga*MTk4NTQ4Njk4MS4xNjk1NzI0MDk0*_ga_CW55HF8NVT*MTY5NjkzOTAwNS40LjEuMTY5Njk0NjI3My4yNC4wLjA.',
 		impressions: [userIds[0], userIds[5]],
 	}
 ]

@@ -16,13 +16,15 @@ const ProfilePage = () => {
 	const { data: userProfile = {} } = useGetUserProfileQuery(id);
 	let user = userProfile;
 	if (id === accountUser._id) user = accountUser;
+	useEffect(() => {
+		document.title = user?.name
+	}, [user])
 
 	return (
 		<Box>
-			<Navbar />
 			<Box
 				width="100%"
-				padding="2rem 6%"
+				padding="112px 6%"
 				display={isNonMobileScreens ? "flex" : "block"}
 				gap="2rem"
 				justifyContent="center"

@@ -10,7 +10,7 @@ import { Friend } from 'components/Friend';
 import { useSelector } from 'react-redux';
 import { SearchedUsers } from 'components/SearchedUsers';
 
-export const FriendList = ({ friends, search, loading, title }) => {
+export const FriendList = ({ friends, search, loading, title, friendRequest }) => {
 	const { palette } = useTheme()
 	const { pending } = useSelector(state => state.auth)
 	const isLoading = loading || pending
@@ -48,6 +48,7 @@ export const FriendList = ({ friends, search, loading, title }) => {
 							picturePath={friend.picturePath}
 							friendId={friend._id}
 							search={search}
+							friendRequest={friendRequest}
 						/>
 					))
 				}

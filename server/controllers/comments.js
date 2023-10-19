@@ -1,6 +1,9 @@
 import Comment from "../models/Comment.js";
 import Post from "../models/Post.js";
 import User from "../models/User.js";
+import Notification from "../models/Notification.js";
+import { activeUsers, io } from '../index.js'
+import { sendNotification } from "../utils/createNotification.js";
 
 export const addRemoveLike = async (req, res) => {
 	try {
@@ -42,11 +45,64 @@ export const createComment = async (req, res) => {
 			repliedToId,
 		});
 		const savedComment = await comment.save()
+		if (userId !== post.userId.toString()) {
+			if (savedComment.repliedToId) {
+				sendNotification({
+					user: {
+						id: post.userId,
+						name: post.firstName + ' ' + post.lastName,
+						picturePath: post.userPicturePath,
+					},
+					fromUser: {
+						id: user._id,
+						name: user.name,
+						picturePath: user.picturePath,
+					},
+					post: {
+						id: post._id,
+						picturePath: post.picturePath,
+					},
+					comment: {
+						id: savedComment._id,
+						text: savedComment.text,
+						repliedToId: savedComment.repliedToId,
+					},
+					toId: savedComment.repliedToId,
+					type: 'reply'
+				})
+			}
+			sendNotification({
+				user: {
+					id: post.userId,
+					name: post.firstName + ' ' + post.lastName,
+					picturePath: post.userPicturePath,
+				},
+				fromUser: {
+					id: user._id,
+					name: user.name,
+					picturePath: user.picturePath,
+				},
+				comment: {
+					id: savedComment._id,
+					text: savedComment.text,
+				},
+				post: {
+					id: post._id,
+					picturePath: post.picturePath,
+				},
+				type: 'addComment',
+				toId: post.userId
+			})
+		}
+
 		if (parentCommentId) {
+			const parentComment = await Comment.findById(parentCommentId)
+			parentComment.comments.push(savedComment._id)
 			post.comments.commentComments.push({
 				postCommentId: parentCommentId,
 				comment: savedComment._id
 			})
+			await parentComment.save()
 		} else {
 			post.comments.postComments.push(savedComment._id)
 		}

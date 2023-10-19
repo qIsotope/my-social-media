@@ -10,7 +10,6 @@ import Dropzone from "react-dropzone";
 import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
 import FlexBetween from "components/FlexBetween";
 import { useForm } from "react-hook-form"
-import { useDispatch, useSelector } from 'react-redux'
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from "yup";
 import { useRegisterMutation } from 'state/service/userApi';
@@ -69,7 +68,6 @@ export default function Form({ setPageType, setError, setSuccess }) {
 			formData.append(value, data[value]);
 		}
 		formData.append("picture", values.picture);
-		formData.append("picturePath", values.picture?.name || '');
 		registerUser(formData);
 	}
 
@@ -111,7 +109,7 @@ export default function Form({ setPageType, setError, setSuccess }) {
 					p="1rem"
 				>
 					<Dropzone
-						// acceptedFiles=".jpg,.jpeg,.png"
+						acceptedFiles=".jpg,.jpeg,.png"
 						multiple={false}
 						onDrop={(acceptedFiles) => {
 							setValue("picture", acceptedFiles[0], { shouldValidate: true })

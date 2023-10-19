@@ -1,6 +1,7 @@
 import { Box } from "@mui/material";
 
 const UserImage = ({ image, size = "60px" }) => {
+	const picturePath = !image?.includes('firebase') ? `http://localhost:5005/assets/${image}` : image;
   return (
     <Box width={size} height={size}>
       <img
@@ -8,7 +9,7 @@ const UserImage = ({ image, size = "60px" }) => {
         width={size}
         height={size}
         alt="user"
-        src={image ? `http://localhost:5005/assets/${image}` : 'http://localhost:5005/assets/defaultUserImage.jpg'}
+        src={image ? picturePath : 'http://localhost:5005/assets/defaultUserImage.jpg'}
       />
     </Box>
   );

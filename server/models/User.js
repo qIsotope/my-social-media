@@ -20,7 +20,7 @@ const UserSchema = mongoose.Schema({
 	},
 	email: {
 		type: String,
-		unique: true,
+		// unique: true,
 		required: true,
 		max: 50,
 	},
@@ -35,6 +35,16 @@ const UserSchema = mongoose.Schema({
 		default: "",
 	},
 	friends: [{
+		type: mongoose.Schema.Types.ObjectId,
+		ref: 'User',
+		default: [],
+	}],
+	sentFriendRequests:  [{
+		type: mongoose.Schema.Types.ObjectId,
+		ref: 'User',
+		default: [],
+	}],
+	receivedFriendRequests :  [{
 		type: mongoose.Schema.Types.ObjectId,
 		ref: 'User',
 		default: [],

@@ -1,15 +1,21 @@
 import jwt from "jsonwebtoken";
 import User from "../models/User.js";
-import Post from "../models/Post.js";
+import Notification from "../models/Notification.js";
 import bcrypt from 'bcrypt';
+import { v4 } from 'uuid'
+import Post from "../models/Post.js";
+import { storage } from '../firebase.js'
+import { ref, uploadBytesResumable, getDownloadURL } from 'firebase/storage'
 
 export const authMe = async (req, res) => {
 	try {
 		const { id } = req.id;
-		const user = await User.findById(id).populate('friends').exec();
+		const user = await User.findById(id).populate(['friends', 'sentFriendRequests', 'receivedFriendRequests']).exec();
+		const notificationsCount = await Notification.countDocuments({ ['user.id']: id, unRead: true });
+		const userPosts = await Post.find({ userId: id, isDeleted: false });
+		const likesCount = userPosts.reduce((acc, post) => acc + post.likes.length, 0)
 		if (!user) return res.status(405).json({ msg: 'User not found' });
-		const savedUser = await user.save()
-		return res.status(200).json({ user: savedUser });
+		return res.status(200).json({ user: { ...user._doc, notificationsCount, impressions: likesCount } });
 	}
 	catch (err) {
 		res.status(500).json({ error: err.message });
@@ -26,10 +32,18 @@ export const register = async (req, res) => {
 			password,
 			location,
 			occupation,
-			picturePath,
 		} = req.body;
+		let picturePath = '';
 		const salt = await bcrypt.genSalt();
 		const passwordHash = await bcrypt.hash(password, salt);
+		if (req.file?.buffer) {
+			console.log(req.file);
+			const path = `users/${req.file?.originalname}.${v4()}`
+			const imageRef = ref(storage, path);
+			const uploadTask = await uploadBytesResumable(imageRef, req.file?.buffer, { contentType: req.file.mimetype });
+			const downloadURL = await getDownloadURL(uploadTask.ref)
+			picturePath = downloadURL;
+		}
 
 		const user = new User({
 			firstName,
@@ -41,10 +55,9 @@ export const register = async (req, res) => {
 			occupation,
 			picturePath,
 		})
-
 		const savedUser = await user.save();
 
-		res.status(201).json(savedUser);
+		res.status(201).json(user);
 	} catch (error) {
 		if (error.code === 11000) {
 			res.status(405).json({ error: error.message });

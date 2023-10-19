@@ -16,12 +16,6 @@ export default function LoginPage() {
 	const theme = useTheme()
 
 	useEffect(() => {
-		if (token && user) {
-			
-		} 
-	}, [])
-
-	useEffect(() => {
 		if (error) {
 			toast.error(error)
 			setError('');
@@ -30,6 +24,10 @@ export default function LoginPage() {
 			toast.success('User has been created')
 		}
 	}, [error, success])
+
+	useEffect(() => {
+		document.title = "Login"
+	}, [])
 
 	return (
 		<Box>
@@ -44,7 +42,7 @@ export default function LoginPage() {
 				</Typography>
 			</Box>
 			<Box
-				margin="2rem auto"
+				margin="3rem auto"
 				backgroundColor={theme.palette.background.alt}
 				borderRadius="1.5rem"
 				width="50%"

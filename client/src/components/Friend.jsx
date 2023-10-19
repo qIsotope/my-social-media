@@ -6,48 +6,96 @@ import {
 	Typography,
 	IconButton,
 	Skeleton,
+	Badge,
+	Tooltip
 } from "@mui/material";
 import {
 	PersonAddOutlined,
 	PersonRemoveOutlined,
+	RemoveOutlined,
 	Delete,
 } from "@mui/icons-material";
 import FlexBetween from './FlexBetween';
 import UserImage from './UserImage';
 import { Link } from 'react-router-dom';
-import { useAddRemoveFriendMutation } from 'state/service/userApi';
 import { useDeletePostMutation } from 'state/service/postsApi';
+import { useAcceptFriendRequestMutation, useCancelSendedFriendRequestMutation, useDeleteFriendMutation, useSendFriendRequestMutation } from 'state/service/friendsApi';
 
-export const Friend = ({ friendId, name, subtitle, picturePath, isAuthor, postId, setIsDeleted, search, loading }) => {
+export const Friend = ({ friendId, name, subtitle, picturePath, isAuthor, postId, setIsDeleted, search, loading, post, time }) => {
 	const { palette } = useTheme();
-	const { user, pending } = useSelector(state => state.auth)
-	const [isFriend, setIsFriend] = useState(false)
+	const { user, pending, activeUsers } = useSelector(state => state.auth)
+
+	const [sendFriendRequest] = useSendFriendRequestMutation();
+	const [cancelFriendRequest] = useCancelSendedFriendRequestMutation();
+	const [acceptFriendRequest] = useAcceptFriendRequestMutation();
+	const [deleteFriend] = useDeleteFriendMutation();
+	const [deletePostAction] = useDeletePostMutation()
 
 	const primaryLight = search ? palette.primary.mediumLight : palette.primary.light;
 	const primaryDark = palette.primary.dark;
 	const main = search ? palette.neutral.dark : palette.neutral.mediumMain;
 	const medium = search ? palette.neutral.mediumMain : palette.neutral.medium;
-	
-	const isLoading = loading || pending;
-	const [addRemoveFriend] = useAddRemoveFriendMutation();
-	const [deletePostAction] = useDeletePostMutation()
 
-	useEffect(() => {
-		if (user.friends?.some(friend => friend._id === friendId)) {
-			setIsFriend(true)
-		} else {
-			setIsFriend(false)
-		};
-	}, [user.friends])
-	const toggleFriend = () => {
-		addRemoveFriend({ id: user._id, friendId })
-		setIsFriend(!isFriend);
+	const isLoading = loading || pending;
+
+	const handleSendFriendRequest = () => {
+		sendFriendRequest({ id: user._id, friendId })
+	}
+
+	const handleCancelFriendRequest = () => {
+		cancelFriendRequest({ id: user._id, friendId });
+	}
+
+	const handleAcceptFriendRequest = () => {
+		acceptFriendRequest({ id: user._id, friendId })
+	}
+
+	const handleDeleteFriendRequest = () => {
+		deleteFriend({ id: user._id, friendId });
 	}
 
 	const deletePost = (id) => {
 		setIsDeleted(true)
 		deletePostAction(id)
 	}
+
+	const getFriendStatus = () => {
+		if (user.friends?.some(friend => friend._id === friendId)) {
+			return {
+				action: () => {
+					handleDeleteFriendRequest()
+				},
+				icon: PersonRemoveOutlined,
+				tooltip: 'Delete Friend',
+			}
+		} else if (user.sentFriendRequests?.some(friend => friend._id === friendId)) {
+			return {
+				action: () => {
+					handleCancelFriendRequest()
+				},
+				icon: RemoveOutlined,
+				tooltip: 'Cancel Request',
+			}
+		} else if (user.receivedFriendRequests?.some(friend => friend._id === friendId)) {
+			return {
+				action: () => {
+					handleAcceptFriendRequest()
+				},
+				icon: PersonAddOutlined,
+				tooltip: 'Add to Friend'
+			}
+		} else {
+			return {
+				action: () => {
+					handleSendFriendRequest()
+				},
+				icon: PersonAddOutlined,
+				tooltip: 'Send Request'
+			}
+		}
+	};
+
+	const { action, reverseAction, tooltip, icon: Icon } = getFriendStatus();
 
 	const saveSearchedUser = useCallback(() => {
 		if (!search) return
@@ -62,6 +110,8 @@ export const Friend = ({ friendId, name, subtitle, picturePath, isAuthor, postId
 		if (alreadySaved) users = users.filter(user => user.id !== alreadySaved.id)
 		return window.localStorage.setItem('searchedUsers', JSON.stringify([savedUser, ...users]))
 	}, [search])
+
+	const showOnline = activeUsers.includes(friendId)
 
 	return (
 		<Box display="flex" flexDirection="column" gap="1.5rem">
@@ -78,7 +128,10 @@ export const Friend = ({ friendId, name, subtitle, picturePath, isAuthor, postId
 						</>
 						:
 						<>
-							<UserImage size="55" image={picturePath} />
+							<Badge variant={showOnline ? "dot" : ''} color="success" anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+								sx={{ '& .MuiBadge-badge': { bottom: '6px', right: "3px", zIndex: 0 } }}>
+								<UserImage size="55" image={picturePath} />
+							</Badge>
 							<Box>
 								<Link to={'/profile/' + friendId}>
 									<Typography
@@ -96,9 +149,16 @@ export const Friend = ({ friendId, name, subtitle, picturePath, isAuthor, postId
 										{name}
 									</Typography>
 								</Link>
-								<Typography color={medium} fontSize="0.75rem">
-									{subtitle}
-								</Typography>
+								{postId
+									? <Link to={'post/' + postId}>
+										<Typography color={medium} fontSize="0.75rem" sx={{ "&:hover": { textDecoration: "underline", } }}>
+											{time}
+										</Typography>
+									</Link>
+									: <Typography color={medium} fontSize="0.75rem">
+										{subtitle}
+									</Typography>
+								}
 							</Box>
 						</>
 					}
@@ -110,18 +170,17 @@ export const Friend = ({ friendId, name, subtitle, picturePath, isAuthor, postId
 					>
 						<Delete sx={{ color: primaryDark }} />
 					</IconButton>
-					: friendId !== user._id && <IconButton
-						sx={{ backgroundColor: primaryLight, p: "0.6rem" }}
-						onClick={toggleFriend}
-					>
-						{isFriend ? (
-							<PersonRemoveOutlined sx={{ color: primaryDark }} />
-						) : (
-							<PersonAddOutlined sx={{ color: primaryDark }} />
-						)}
-					</IconButton>
+					: friendId !== user._id &&
+					<Tooltip title={tooltip} placement="bottom">
+						<IconButton
+							sx={{ backgroundColor: primaryLight, p: "0.6rem" }}
+							onClick={() => action()}
+						>
+							<Icon />
+						</IconButton>
+					</Tooltip>
 				}
 			</FlexBetween>
-		</Box>
+		</Box >
 	)
 }

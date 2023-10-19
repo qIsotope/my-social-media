@@ -14,7 +14,7 @@ export const LikesTooltip = ({ showLikes, likesCount, likes, onClick }) => {
 					{likes.map((like, index) => {
 						if (index < 3) {
 							return (
-								<Tooltip title={like.name}>
+								<Tooltip key={index} title={like.name}>
 									<Box width="36px" height="36px">
 										<Link to={`/profile/${like._id}`}>
 											<UserImage image={like.picturePath} size='36px' />

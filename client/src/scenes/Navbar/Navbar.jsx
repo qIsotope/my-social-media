@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useRef, useState } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { logout as logoutAction, setMode } from 'state/slices/auth';
 import { useNavigate } from 'react-router-dom'
@@ -11,6 +11,7 @@ import {
 	MenuItem,
 	FormControl,
 	useTheme,
+	Badge,
 } from "@mui/material";
 
 import {
@@ -22,6 +23,7 @@ import {
 } from "@mui/icons-material";
 import FlexBetween from 'components/FlexBetween';
 import { SearchWidget } from 'scenes/widgets/User/SearchWidget';
+import NotificationsWindow from 'scenes/widgets/Notifications/NotificationWindow/NotificationsWindow';
 
 export default function Navbar() {
 	const theme = useTheme();
@@ -32,6 +34,8 @@ export default function Navbar() {
 	const alt = theme.palette.background.alt;
 	const dispatch = useDispatch()
 	const navigate = useNavigate()
+	const notificationIcon = useRef(null);
+	const [open, setOpen] = useState(false)
 
 	const logout = () => {
 		dispatch(logoutAction());
@@ -41,7 +45,7 @@ export default function Navbar() {
 	const fullName = user.firstName + ' ' + user.lastName;
 
 	return (
-		<FlexBetween padding="1rem 6%" backgroundColor={alt}>
+		<FlexBetween padding="1rem 6%" width="100%" position="fixed" zIndex="100" backgroundColor={alt}>
 			<FlexBetween gap="1.75rem">
 				<Link to="/home">
 					<Typography
@@ -66,9 +70,12 @@ export default function Navbar() {
 				<IconButton>
 					<Message sx={{ fontSize: "25px", color: dark }} />
 				</IconButton>
-				<IconButton>
-					<Notifications sx={{ fontSize: "25px", color: dark }} />
+				<IconButton onClick={() => setOpen(!open)} ref={notificationIcon}>
+					<Badge badgeContent={user.notificationsCount} color="error">
+						<Notifications sx={{ fontSize: "25px", color: dark }} />
+					</Badge>
 				</IconButton>
+				{open && <NotificationsWindow anchorRef={notificationIcon} open={open} setOpen={setOpen} />}
 				<IconButton>
 					<Help sx={{ fontSize: "25px", color: dark }} />
 				</IconButton>

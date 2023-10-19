@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react'
+import React, { useRef, useState, useEffect } from 'react'
 import { useSelector } from 'react-redux'
 import {
 	Box,
@@ -7,33 +7,29 @@ import {
 	Divider,
 	InputBase,
 	Button,
-	LinearProgress,
 	Tooltip,
 } from "@mui/material";
 import {
-	EditOutlined,
 	AttachFileOutlined,
 	GifBoxOutlined,
 	ImageOutlined,
 	MicOutlined,
 	Close,
 } from "@mui/icons-material";
-import { storage } from 'firebase.js'
 import { v4 } from 'uuid'
-import { ref, uploadBytesResumable, getDownloadURL, deleteObject } from 'firebase/storage'
 
 import FlexBetween from 'components/FlexBetween';
 import WidgetWrapper from 'components/WidgetWrapper';
 import UserImage from 'components/UserImage';
 import { useCreatePostMutation } from 'state/service/postsApi';
 import { ImageModal } from 'components/ImageModal';
+import { useUploadImageMutation } from 'state/service/uploadApi';
 
 const CreatePostWidget = () => {
 	const { user } = useSelector(state => state.auth)
 
 	const [createPost, { isLoading, isFetching }] = useCreatePostMutation()
-	const [isUploading, setIsUploading] = useState(false)
-	const [uploadImagePath, setUploadImagePath] = useState('')
+	const [uploadImage, { isLoading: isLoadUpload, isFetching: isFetchUpload, data: imageUrl }] = useUploadImageMutation()
 	const [openModal, setOpenModal] = useState(false)
 	const [pictureURL, setPictureURL] = useState(null);
 	const [description, setDescription] = useState('')
@@ -43,47 +39,31 @@ const CreatePostWidget = () => {
 	const medium = theme.palette.neutral.medium;
 	const mediumMain = theme.palette.neutral.mediumMain;
 
+	useEffect(() => {
+		if (imageUrl) {
+			setPictureURL(imageUrl.url)
+		}
+	}, [imageUrl])
+
 	const sendPost = () => {
-		const formData = new FormData();
-		formData.append('description', description);
-		formData.append('userId', user._id)
-		formData.append('picturePath', pictureURL ? pictureURL : '')
 		setPictureURL(null)
 		setDescription('')
-		createPost(formData);
+		createPost({ description, userId: user._id, picturePath: pictureURL ? pictureURL : '' });
 	}
 
 	const handleUpload = (picture) => {
 		if (picture) {
-			const path = `preview/${picture.name}.${v4()}`
-			setUploadImagePath(path)
-			const imageRef = ref(storage, path);
-			const uploadTask = uploadBytesResumable(imageRef, picture);
-			uploadTask.on(
-				'state_changed',
-				() => {
-					setPictureURL(null);
-					setIsUploading(true)
-				},
-				(error) => {
-					console.error(error);
-				},
-				() => {
-					getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
-						setPictureURL(downloadURL);
-						setIsUploading(false)
-					});
-				}
-			);
+			const path = `posts/${picture.name}.${v4()}`
+			const formData = new FormData();
+			formData.append('image', picture);
+			formData.append('path', path);
+			uploadImage(formData)
 		}
 	};
 
 	const handleRemovePhoto = (e) => {
 		e.stopPropagation()
-		const desertRef = ref(storage, uploadImagePath);
 		setPictureURL(null)
-		setUploadImagePath('')
-		deleteObject(desertRef);
 	}
 	return (
 		<WidgetWrapper>
@@ -103,7 +83,7 @@ const CreatePostWidget = () => {
 			</FlexBetween>
 			<Box onClick={() => setOpenModal(true)} mt="20px" width="65%" sx={{ cursor: 'pointer' }} >
 				<Box position="relative">
-					<Box position="absolute" right="10px" top="10px" sx={{display: !pictureURL && 'none'}}>
+					<Box position="absolute" right="10px" top="10px" sx={{ display: !pictureURL && 'none' }}>
 						<Tooltip title="Remove photo" placement='top'>
 							<Close onClick={(e) => handleRemovePhoto(e)} sx={{ '&:hover': { color: theme.palette.primary.main }, color: theme.palette.neutral.medium }} />
 						</Tooltip>
@@ -159,9 +139,9 @@ const CreatePostWidget = () => {
 						borderRadius: "3rem",
 					}}
 					onClick={sendPost}
-					disabled={isLoading || isFetching || isUploading}
+					disabled={isLoading || isFetching || isLoadUpload || isFetchUpload}
 				>
-					{(isLoading || isFetching || isUploading) ? 'Loading...' : 'Post'}
+					{(isLoading || isFetching || isLoadUpload || isFetchUpload) ? 'Loading...' : 'Post'}
 				</Button>
 			</FlexBetween>
 		</WidgetWrapper >

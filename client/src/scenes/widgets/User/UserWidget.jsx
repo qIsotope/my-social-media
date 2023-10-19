@@ -17,15 +17,12 @@ import FlexBetween from 'components/FlexBetween';
 import WidgetWrapper from 'components/WidgetWrapper';
 import UserImage from 'components/UserImage';
 import { Link } from 'react-router-dom';
-import { useSelector } from 'react-redux';
 
 const UserWidget = ({ user }) => {
 	const theme = useTheme();
 	const dark = theme.palette.neutral.dark;
 	const medium = theme.palette.neutral.medium;
 	const main = theme.palette.neutral.main;
-	const { impressionsCount } = useSelector(state => state.auth)
-
 	return (
 		<WidgetWrapper>
 			<FlexBetween gap="0.5rem" pb="1.1rem">
@@ -76,7 +73,7 @@ const UserWidget = ({ user }) => {
 				<FlexBetween>
 					<Typography color={medium}>Impressions of post</Typography>
 					<Typography color={main} fontWeight="500">
-						{impressionsCount}
+						{user?.impressions}
 					</Typography>
 				</FlexBetween>
 			</Box>

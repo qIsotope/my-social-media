@@ -2,10 +2,11 @@ import { createSlice } from "@reduxjs/toolkit";
 import { api } from "state/service/api";
 
 const initialState = {
-	mode: window.localStorage.getItem('mode') || 'light',
+	mode: window.localStorage.getItem('mode') || 'dark',
 	user: {},
 	token: null,
-	impressionsCount: 0,
+	activeUsers: [],
+	refs: [],
 };
 
 export const authSlice = createSlice({
@@ -21,8 +22,16 @@ export const authSlice = createSlice({
 			state.mode = state.mode === 'dark' ? 'light' : 'dark'
 			window.localStorage.setItem('mode', state.mode);
 		},
-		setImpressionsCount: (state, action) => {
-			state.impressionsCount = action.payload
+		setActiveUsers: (state, action) => {
+			state.activeUsers = action.payload
+		},
+		updateNotificationsCount: (state) => {
+			state.user.notificationsCount += 1;
+		},
+		updateRefs: (state, action) => {
+			if (!state.refs.includes(action.payload)) {
+				state.refs.push(action.payload)
+			}
 		}
 	},
 	extraReducers: (builder) => {
@@ -34,6 +43,7 @@ export const authSlice = createSlice({
 				state.token = action.payload.token
 			}
 		)
+		// login
 		builder.addMatcher(
 			api.endpoints.login.matchFulfilled,
 			(state, action) => {
@@ -42,8 +52,45 @@ export const authSlice = createSlice({
 				state.token = action.payload.token
 			}
 		)
+		// sentFriendRequests
+		builder.addMatcher(
+			api.endpoints.sendFriendRequest.matchFulfilled,
+			(state, action) => {
+				state.user.sentFriendRequests = action.payload.sentFriendRequests
+			}
+		)
+		// acceptFriendRequest
+		builder.addMatcher(
+			api.endpoints.acceptFriendRequest.matchFulfilled,
+			(state, action) => {
+				state.user.friends = action.payload.friends
+				state.user.receivedFriendRequests = action.payload.receivedFriendRequests
+			}
+		)
+		// cancelSendedFriendRequest
+		builder.addMatcher(
+			api.endpoints.cancelSendedFriendRequest.matchFulfilled,
+			(state, action) => {
+				state.user.sentFriendRequests = action.payload.sentFriendRequests
+			}
+		)
+		// deleteFriend
+		builder.addMatcher(
+			api.endpoints.deleteFriend.matchFulfilled,
+			(state, action) => {
+				state.user.friends = action.payload.friends
+				state.user.receivedFriendRequests = action.payload.receivedFriendRequests
+			}
+		)
+		// getNotifications
+		builder.addMatcher(
+			api.endpoints.getNotifications.matchFulfilled,
+			(state) => {
+				state.user.notificationsCount = 0;
+			}
+		)
 	}
 });
 
-export const { logout, setMode, setImpressionsCount } = authSlice.actions;
+export const { logout, setMode, setActiveUsers, updateNotificationsCount, updateRefs } = authSlice.actions;
 export default authSlice.reducer;

@@ -23,6 +23,25 @@ export const postsApi = api.injectEndpoints({
 				return response
 			}
 		}),
+		getPost: build.query({
+			query: (id) => 'post/' + id,
+			transformResponse: (response) => {
+				const comments = [];
+				response.comments.postComments.forEach(comment => {
+					const childrenComments = response.comments.commentComments.filter(comm => comm.postCommentId === comment._id).map(comm => comm.comment);
+					comment.comments = childrenComments
+					comments.push(comment);
+					if (comment.isDeleted && comment.comments.length) {
+						comment.firstName = ''
+						comment.lastName = ''
+						comment.text = 'This comment has been deleted by the user';
+						comment.userPicturePath = 'defaultUserImage.jpg';
+					}
+				})
+				response.comments = comments.filter(comm => !comm.isDeleted || comm.comments.length);
+				return response
+			}
+		}),
 		deletePost: build.mutation({
 			query: (id) => ({
 				url: 'posts/' + id,
@@ -82,4 +101,4 @@ export const postsApi = api.injectEndpoints({
 	}),
 })
 
-export const { useLazyGetPostsQuery, useCreatePostMutation, useLikeDislikePostMutation, useDeletePostMutation, } = postsApi
+export const { useLazyGetPostsQuery, useCreatePostMutation, useLikeDislikePostMutation, useDeletePostMutation, useLazyGetPostQuery } = postsApi

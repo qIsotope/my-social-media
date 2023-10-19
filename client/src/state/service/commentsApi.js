@@ -1,6 +1,5 @@
 import { api } from './api'
 import { postsApi } from './postsApi'
-import { current } from '@reduxjs/toolkit'
 
 const commentsApi = api.injectEndpoints({
 	endpoints: (build) => ({

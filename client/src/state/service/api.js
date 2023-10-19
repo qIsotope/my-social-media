@@ -8,8 +8,12 @@ export const api = createApi({
 			const token = window.localStorage.getItem('token')
 			if (token) headers.set('Authorization', 'Bearer ' + token)
 			return headers;
-		}
+		},
 	}),
 	
   endpoints: () => ({})
 })
+
+export const {
+	useNotificationReaderQuery
+} = api;

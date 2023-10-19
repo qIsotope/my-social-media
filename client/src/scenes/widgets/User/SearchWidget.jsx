@@ -20,12 +20,11 @@ export const SearchWidget = () => {
 	const debauncedValue = useDebounce(value, 200);
 	const [fetchData, { data, loading }] = useLazySearchUserByQuery()
 
+	const handleClickOutside = () => setOpen(false);
+	useOnClickOutside([popper, popperAnchor], handleClickOutside)
+
 	useEffect(() => setOpen(false), [location.pathname])
 
-	const handleClickOutside = () => {
-		setOpen(false)
-	}
-	useOnClickOutside([popper, popperAnchor], handleClickOutside)
 
 	const getUsers = async () => await fetchData(debauncedValue)
 

@@ -3,12 +3,9 @@ import { PostWidget } from './PostWidget';
 import { useParams } from "react-router-dom";
 import { useLazyGetPostsQuery } from 'state/service/postsApi';
 import { useDispatch, useSelector } from 'react-redux';
-import { setImpressionsCount } from 'state/slices/auth';
 
 export const PostsWidget = () => {
 	const { id } = useParams();
-	const { user } = useSelector(state => state.auth)
-	const dispatch = useDispatch();
 	const [getPosts, { data: posts }] = useLazyGetPostsQuery()
 	useEffect(() => {
 		if (id) {
@@ -17,15 +14,7 @@ export const PostsWidget = () => {
 			getPosts()
 		}
 	}, [id])
-	useEffect(() => {
-		if (posts) {
-			if (id) {
-				dispatch(setImpressionsCount(posts.reduce((acc, post) => acc + post.likes.length, 0)))
-			} else {
-				dispatch(setImpressionsCount(posts.filter(post => post.userId === user._id).reduce((acc, post) => acc + post.likes.length, 0)))
-			}
-		}
-	}, [id, posts])
+
 	return (
 		<>
 			{posts?.map(
@@ -40,6 +29,7 @@ export const PostsWidget = () => {
 					userPicturePath,
 					likes,
 					comments,
+					createdAt,
 				}) => (
 					<PostWidget
 						key={_id}
@@ -52,6 +42,7 @@ export const PostsWidget = () => {
 						userPicturePath={userPicturePath}
 						likes={likes}
 						comments={comments}
+						createdAt={createdAt}
 					/>
 				)
 			)}
