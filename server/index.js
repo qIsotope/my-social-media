@@ -66,4 +66,4 @@ mongoose
 		// Comment.insertMany(comments);
 		// Notification.insertMany(notifications);
 	})
-	.catch((error) => console.log(`${error} did not kconnect`));
+	.catch((error) => console.log(`${error} did not connect`));
