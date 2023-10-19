@@ -25,10 +25,10 @@ const loginSchema = yup.object().shape({
 });
 
 
-export default function Form({ setPageType, setError }) {
+export default function Form({ setPageType, setError, authError }) {
 	const { palette } = useTheme();
-	const { token } = useSelector(state => state.auth)
 	const navigate = useNavigate()
+	const token = window.localStorage.getItem('token')
 	const [login, { isLoading, isFetching, isError, error }] = useLoginMutation()
 	const {
 		register,
@@ -50,11 +50,11 @@ export default function Form({ setPageType, setError }) {
 	}, [error, isError])
 
 	useEffect(() => {
-		if (window.localStorage.getItem('token')) {
+		if (token && !authError) {
 			navigate('/home')
 			reset()
 		}
-	}, [window.localStorage.getItem('token')])
+	}, [token, authError])
 
 	return (
 		<>

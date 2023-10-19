@@ -7,9 +7,9 @@ import { ToastContainer, toast } from 'react-toastify';
 
 import 'react-toastify/dist/ReactToastify.css';
 
-export default function LoginPage() {
+export default function LoginPage({ error: authError }) {
 	const [pageType, setPageType] = useState('login')
-	const { user, token, theme: appTheme } = useSelector(state => state.auth)
+	const { theme: appTheme } = useSelector(state => state.auth)
 	const [error, setError] = useState(null);
 	const [success, setSuccess] = useState(false);
 	const isLogin = pageType === 'login'
@@ -52,7 +52,9 @@ export default function LoginPage() {
 					Welcome to Socipedia, the Social Media for Sociopaths!
 				</Typography>
 				<Box>
-					{isLogin ? <LoginForm setPageType={setPageType} setError={setError} /> : <RegisterForm setPageType={setPageType} setError={setError} setSuccess={setSuccess} />}
+					{isLogin
+						? <LoginForm setPageType={setPageType} setError={setError} authError={authError} />
+						: <RegisterForm setPageType={setPageType} setError={setError} setSuccess={setSuccess} />}
 				</Box>
 			</Box>
 			<ToastContainer

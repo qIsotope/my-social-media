@@ -18,11 +18,11 @@ import Navbar from 'scenes/Navbar/Navbar';
 import NotificationPage from 'scenes/NotificationPage/NotificationPage';
 
 function App() {
-	const { mode, user, error } = useSelector(state => state.auth)
+	const { mode, user } = useSelector(state => state.auth)
 	const theme = useMemo(() => createTheme(themeSettings(mode)), [mode]);
 	const navigate = useNavigate()
 	const location = useLocation()
-	const { } = useAuthMeQuery(undefined, {
+	const {error} = useAuthMeQuery(undefined, {
 		skip: !localStorage.getItem('token')
 	})
 	useEffect(() => {
@@ -35,7 +35,8 @@ function App() {
 		if (Object.keys(user).length) {
 			socket.emit('add-user', user._id)
 		}
-	}, [user])
+		if (error) navigate('/')
+	}, [user, error])
 
 	return (
 		<div className="app">
@@ -43,7 +44,7 @@ function App() {
 				<CssBaseline />
 				<Show condition={location.pathname !== '/'}><Navbar /></Show>
 				<Routes>
-					<Route path="/" element={<LoginPage />} />
+					<Route path="/" element={<LoginPage error={error} />} />
 					<Route path="/home/post?/:postPreviewId?" element={<HomePage />} />
 					<Route path="/profile/:id/post?/:postPreviewId?" element={<ProfilePage />} />
 					<Route path="/notifications/post?/:postPreviewId?" element={<NotificationPage />} />

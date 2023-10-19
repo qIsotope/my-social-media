@@ -15,7 +15,7 @@ export const postsApi = api.injectEndpoints({
 							comment.firstName = ''
 							comment.lastName = ''
 							comment.text = 'This comment has been deleted by the user';
-							comment.userPicturePath = 'defaultUserImage.jpg';
+							comment.userPicturePath = 'https://firebasestorage.googleapis.com/v0/b/my-social-media-c3987.appspot.com/o/users%2FdefaultUserImage.jpg?alt=media&token=adb2a1ad-59af-47f3-a235-27f49f14ca12&_gl=1*1cew9mf*_ga*MTk4NTQ4Njk4MS4xNjk1NzI0MDk0*_ga_CW55HF8NVT*MTY5NzcyMTQ3My43LjEuMTY5NzcyMzg3NS44LjAuMA..';
 						}
 					})
 					post.comments = comments.filter(comm => !comm.isDeleted || comm.comments.length);
@@ -35,7 +35,7 @@ export const postsApi = api.injectEndpoints({
 						comment.firstName = ''
 						comment.lastName = ''
 						comment.text = 'This comment has been deleted by the user';
-						comment.userPicturePath = 'defaultUserImage.jpg';
+						comment.userPicturePath = 'https://firebasestorage.googleapis.com/v0/b/my-social-media-c3987.appspot.com/o/users%2FdefaultUserImage.jpg?alt=media&token=adb2a1ad-59af-47f3-a235-27f49f14ca12&_gl=1*1cew9mf*_ga*MTk4NTQ4Njk4MS4xNjk1NzI0MDk0*_ga_CW55HF8NVT*MTY5NzcyMTQ3My43LjEuMTY5NzcyMzg3NS44LjAuMA..';
 					}
 				})
 				response.comments = comments.filter(comm => !comm.isDeleted || comm.comments.length);
