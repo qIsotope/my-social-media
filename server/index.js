@@ -3,23 +3,11 @@ import bodyParser from "body-parser";
 import mongoose from "mongoose";
 import cors from "cors";
 import dotenv from "dotenv";
-import multer from "multer";
+
 import helmet from "helmet";
 import morgan from "morgan";
 import { Server } from 'socket.io'
-import { fileURLToPath } from "url";
-import { register, login, authMe } from "./controllers/auth.js";
-import { getUser, sendFriendRequest, cancelSendedFriendRequest, acceptFriendRequest, deleteFriend, getUsersBySearchQuery } from "./controllers/users.js";
-import { addRemoveLike, createPost, getPost, getPosts, getUserPosts, softDeletePost } from "./controllers/posts.js";
-import { addRemoveLike as addRemoveCommentLike, createComment, softDeleteComment, softDeleteThread, updateComment } from "./controllers/comments.js";
-import { uploadImage } from "./controllers/upload.js";
-import {getNotifications} from "./controllers/notifications.js"
-import { checkAuth } from "./middlewares/auth.js";
-import User from "./models/User.js";
-import Post from "./models/Post.js";
-import Comment from "./models/Comment.js";
-import Notification from "./models/Notification.js";
-import { users, posts, comments } from './data/index.js';
+import { authRouter, commentsRouter, friendsRouter, notificationsRouter, postsRouter, uploadRouter, userRouter } from './routers/index.js'
 
 /* CONFIGURATIONS */
 dotenv.config();
@@ -31,45 +19,14 @@ app.use(helmet.crossOriginResourcePolicy({ policy: "cross-origin" }));
 app.use(bodyParser.json({ limit: "30mb", extended: true }));
 app.use(bodyParser.urlencoded({ limit: "30mb", extended: true }));
 app.use(cors());
-const upload = multer({ storage: multer.memoryStorage() });
 
-//auth
-app.get('/auth/me', checkAuth, authMe);
-app.post('/auth/register', upload.single("picture"), register);
-app.post('/auth/login', login);
-
-//users
-app.get('/users/:id', checkAuth, getUser);
-app.get('/search/users/:query?', checkAuth, getUsersBySearchQuery);
-
-// friends
-app.patch('/friends/sendFriendRequest', checkAuth, sendFriendRequest);
-app.patch('/friends/acceptFriendRequest', checkAuth, acceptFriendRequest);
-app.patch('/friends/cancelSendedFriendRequest', checkAuth, cancelSendedFriendRequest);
-app.patch('/friends/deleteFriend', checkAuth, deleteFriend);
-
-// posts
-app.post('/posts', createPost);
-app.get('/posts', checkAuth, getPosts);
-app.get('/post/:id', checkAuth, getPost);
-app.delete('/posts/:id', checkAuth, softDeletePost);
-app.get('/posts/:userId', checkAuth, getUserPosts);
-app.patch('/posts/likes/:postId', checkAuth, addRemoveLike);
-
-// comments
-app.post('/comments', createComment);
-app.patch('/comments/:id', updateComment);
-app.patch('/comments/likes/:commentId', checkAuth, addRemoveCommentLike);
-app.delete('/comments/:id', checkAuth, softDeleteComment);
-app.delete('/threads', checkAuth, softDeleteThread);
-
-// notifications
-app.get('/notifications/:id', checkAuth, getNotifications);
-
-// upload
-app.post('/upload/image', checkAuth, upload.single("image"), uploadImage);
-
-
+app.use('/auth', authRouter);
+app.use('/users', userRouter);
+app.use('/friends', friendsRouter);
+app.use('/posts', postsRouter);
+app.use('/comments', commentsRouter);
+app.use('/notifications', notificationsRouter);
+app.use('', uploadRouter);
 
 const PORT = process.env.PORT || 6001;
 // start server

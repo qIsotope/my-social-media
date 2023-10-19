@@ -23,7 +23,7 @@ export const userApi = api.injectEndpoints({
 			query: (id) => 'users/' + id
 		}),
 		searchUserBy: build.query({
-			query: (name) => '/search/users/' + name,
+			query: (name) => '/users/search/' + name,
 		})
 	}),
 })

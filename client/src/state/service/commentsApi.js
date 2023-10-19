@@ -96,7 +96,7 @@ const commentsApi = api.injectEndpoints({
 		}),
 		deleteThread: build.mutation({
 			query: (ids) => ({
-				url: '/threads',
+				url: '/comments/threads',
 				method: 'DELETE',
 				body: { ids }
 			})
