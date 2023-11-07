@@ -69,6 +69,7 @@ export const getPost = async (req, res) => {
 
 export const getUserPosts = async (req, res) => {
 	try {
+		console.log('123')
 		const { userId } = req.params;
 		const post = await Post.find({ userId, isDeleted: false }).populate(['likes', 'comments.postComments', 'comments.commentComments.comment']).exec()
 		res.status(200).json(post);
@@ -83,7 +84,7 @@ export const addRemoveLike = async (req, res) => {
 		const { id } = req.id;
 		const user = await User.findById(id);
 		const post = await Post.findById(postId).populate('likes').exec();
-		const isExistingNotification = await Notification.find({ ['fromUser.id']: id, ['post.id']: post._id, type: 'postLike' });
+		const isExistingNotification = await Notification.find({ ['fromUser.id']: id, ['post.id']: postId, type: 'postLike' });
 		const liked = post.likes.some(like => like._id.toString() === id);
 		if (liked) {
 			post.likes = post.likes.filter(like => like._id.toString() !== id)
@@ -102,9 +103,10 @@ export const addRemoveLike = async (req, res) => {
 						picturePath: user.picturePath,
 					},
 					post: {
-						id: post._id,
+						id: postId,
 						picturePath: post.picturePath,
 					},
+					toId: post.userId,
 					type: 'postLike'
 				})
 			}

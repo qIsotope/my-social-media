@@ -45,11 +45,11 @@ const getformattedNotification = (notification) => {
 				postImagePath: notification.post.picturePath,
 				content: notification.comment.text
 			}
-			case 'reply':
+		case 'reply':
 			return {
 				...baseFormattedNotification,
 				title: 'New Comment Reply!',
-				text: 'just Replied to your comment',
+				text: 'replied to your comment',
 				postLink: notification.post.id,
 				postImagePath: notification.post.picturePath,
 				content: notification.comment.text,
@@ -120,6 +120,7 @@ const notificationApi = api.injectEndpoints({
 				try {
 					await cacheDataLoaded
 					socket.on('notification', (body) => {
+						console.log(body)
 						dispatch(updateNotificationsCount())
 						updateCachedData((draft) => {
 							draft.notifications.push(getformattedNotification(body))

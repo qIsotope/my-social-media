@@ -9,14 +9,13 @@ export const checkAuth = (req, res, next) => {
 		if (token.startsWith("Bearer ")) {
 			token = token.slice(7, token.length).trimLeft();
 		}
-
 		const verified = jsonwebtoken.verify(token, process.env.JWT_SECRET, (err, res) => {
 			if (err) {
-				return null
+				console.log(err);
+				return res.status(403).send("Access denied")
 			}
 			return res;
 		});
-
 		if (!verified) {
 			return res.status(405).json({ msg: 'Invalid token' })
 		}

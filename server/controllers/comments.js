@@ -28,6 +28,7 @@ export const createComment = async (req, res) => {
 		const { userId, text, postId, picturePath, parentCommentId, repliedToName, repliedToId } = req.body;
 		const user = await User.findById(userId);
 		const post = await Post.findById(postId);
+		const repliedToUser = await User.findById(repliedToId);
 		if (!user || !post) {
 			return res.status(404).json({ message: 'Something went wrong' })
 		}
@@ -45,13 +46,15 @@ export const createComment = async (req, res) => {
 			repliedToId,
 		});
 		const savedComment = await comment.save()
-		if (userId !== post.userId.toString()) {
-			if (savedComment.repliedToId) {
+		const isUserPostAuthor = userId === post.userId.toString();
+		const isRepliedToUser = savedComment.repliedToId?.toString() !== userId;
+		if (!isUserPostAuthor || (isUserPostAuthor && isRepliedToUser)) {
+			if (savedComment.repliedToId && isRepliedToUser) {
 				sendNotification({
 					user: {
-						id: post.userId,
-						name: post.firstName + ' ' + post.lastName,
-						picturePath: post.userPicturePath,
+						id: repliedToUser._id,
+						name: repliedToUser.name,
+						picturePath: repliedToUser.userPicturePath,
 					},
 					fromUser: {
 						id: user._id,
@@ -71,28 +74,31 @@ export const createComment = async (req, res) => {
 					type: 'reply'
 				})
 			}
-			sendNotification({
-				user: {
-					id: post.userId,
-					name: post.firstName + ' ' + post.lastName,
-					picturePath: post.userPicturePath,
-				},
-				fromUser: {
-					id: user._id,
-					name: user.name,
-					picturePath: user.picturePath,
-				},
-				comment: {
-					id: savedComment._id,
-					text: savedComment.text,
-				},
-				post: {
-					id: post._id,
-					picturePath: post.picturePath,
-				},
-				type: 'addComment',
-				toId: post.userId
-			})
+
+			if (savedComment.repliedToId?.toString() !== post.userId.toString() && !isUserPostAuthor) {
+				sendNotification({
+					user: {
+						id: post.userId,
+						name: post.firstName + ' ' + post.lastName,
+						picturePath: post.userPicturePath,
+					},
+					fromUser: {
+						id: user._id,
+						name: user.name,
+						picturePath: user.picturePath,
+					},
+					comment: {
+						id: savedComment._id,
+						text: savedComment.text,
+					},
+					post: {
+						id: post._id,
+						picturePath: post.picturePath,
+					},
+					type: 'addComment',
+					toId: post.userId
+				})
+			}
 		}
 
 		if (parentCommentId) {

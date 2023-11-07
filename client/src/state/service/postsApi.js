@@ -24,7 +24,7 @@ export const postsApi = api.injectEndpoints({
 			}
 		}),
 		getPost: build.query({
-			query: (id) => 'post/' + id,
+			query: (id) => 'posts/preview/' + id,
 			transformResponse: (response) => {
 				const comments = [];
 				response.comments.postComments.forEach(comment => {

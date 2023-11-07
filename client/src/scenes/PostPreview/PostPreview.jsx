@@ -1,15 +1,14 @@
 import { Box, Dialog, Typography, useTheme } from '@mui/material';
 import { Friend } from 'components/Friend';
-import WidgetWrapper from 'components/WidgetWrapper';
-import React, { useCallback, useEffect, useRef, useState } from 'react'
-import { useDispatch, useSelector } from 'react-redux';
-import { useLocation } from 'react-router-dom';
-import { useLazyGetPostQuery } from 'state/service/postsApi';
-import { useNavigate } from 'react-router-dom';
 import { PostActions } from 'components/PostActions';
+import WidgetWrapper from 'components/WidgetWrapper';
+import { useCallback, useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { CommentsWidget } from 'scenes/widgets/Comments/CommentsWidget';
 import { CreateCommentWidget } from 'scenes/widgets/Comments/CreateCommentWidget';
-import { addRef, updateRefs } from 'state/slices/auth';
+import { useLazyGetPostQuery } from 'state/service/postsApi';
+import { updateRefs } from 'state/slices/auth';
 
 
 const PostPreview = () => {

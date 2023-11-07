@@ -5,12 +5,12 @@ export const sendNotification = async ({ user, fromUser, post, comment, type, to
 	const notification = new Notification({
 		user: {
 			id: user.id,
-			name: user.firstName + ' ' + post.lastName,
+			name: user.name,
 			picturePath: user.picturePath,
 		},
 		fromUser: {
 			id: fromUser.id,
-			name: fromUser.name || fromUser.firstName + ' ' + fromUser.lastName,
+			name: fromUser.name,
 			picturePath: fromUser.picturePath,
 		},
 		comment: {
@@ -19,7 +19,7 @@ export const sendNotification = async ({ user, fromUser, post, comment, type, to
 			repliedToId: comment?.repliedToId,
 		},
 		post: {
-			id: post?._id,
+			id: post?.id,
 			picturePath: post?.picturePath,
 		},
 		type: type

@@ -65,6 +65,18 @@ const commentsApi = api.injectEndpoints({
 						}
 						));
 					dispatch(
+						postsApi.util.updateQueryData('getPost', createdComment.postId, (draft) => {
+							const neededPost = draft;
+							console.log(postUserId, parentCommentId);
+							if (parentCommentId) {
+								const parentComment = neededPost.comments.find(post => post._id === createdComment.parentCommentId)
+								parentComment.comments.push(createdComment)
+							} else {
+								neededPost.comments.push(createdComment)
+							}
+						}
+						));
+					dispatch(
 						postsApi.util.updateQueryData('getPosts', postUserId, (draft) => {
 							const neededPost = draft.find(post => post._id === createdComment.postId);
 							if (parentCommentId) {
@@ -88,8 +100,8 @@ const commentsApi = api.injectEndpoints({
 			}),
 		}),
 		updateComment: build.mutation({
-			query: ({id, body}) => ({
-				url: '/comments/'+ id,
+			query: ({ id, body }) => ({
+				url: '/comments/' + id,
 				method: 'PATCH',
 				body
 			}),

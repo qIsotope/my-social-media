@@ -1,5 +1,5 @@
-import React, { useCallback, useEffect, useState } from 'react'
-import { useSelector, useDispatch } from 'react-redux'
+import React, { useCallback, useEffect, useRef, useState } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
 import {
 	Box,
 	useTheme,
@@ -7,52 +7,46 @@ import {
 	IconButton,
 	Skeleton,
 	Badge,
-	Tooltip
+	Popper
 } from "@mui/material";
 import {
-	PersonAddOutlined,
-	PersonRemoveOutlined,
-	RemoveOutlined,
-	Delete,
+	MoreHoriz,
 } from "@mui/icons-material";
 import FlexBetween from './FlexBetween';
 import UserImage from './UserImage';
 import { Link } from 'react-router-dom';
 import { useDeletePostMutation } from 'state/service/postsApi';
 import { useAcceptFriendRequestMutation, useCancelSendedFriendRequestMutation, useDeleteFriendMutation, useSendFriendRequestMutation } from 'state/service/friendsApi';
+import { useOnClickOutside } from 'hooks/useOnClickOutside';
+import Show from './Show';
+import { SendMessage } from './SendMessageWindow';
+import { updateRefs } from 'state/slices/auth';
 
 export const Friend = ({ friendId, name, subtitle, picturePath, isAuthor, postId, setIsDeleted, search, loading, post, time }) => {
 	const { palette } = useTheme();
 	const { user, pending, activeUsers } = useSelector(state => state.auth)
+	const popperAnchor = useRef(null);
+	const dispatch = useDispatch()
+	const { refs } = useSelector(state => state.auth)
+	const popper = useCallback(ref => {
+		if (ref) {
+			dispatch(updateRefs({ current: ref }))
+		}
+		return { current: ref }
+	}, [])
+	const [showPopper, setShowPopper] = useState(false)
+	const [showMessageModal, setShowMessageModal] = useState(false)
+	useOnClickOutside([...refs, popperAnchor], () => setShowPopper(false))
 
 	const [sendFriendRequest] = useSendFriendRequestMutation();
 	const [cancelFriendRequest] = useCancelSendedFriendRequestMutation();
 	const [acceptFriendRequest] = useAcceptFriendRequestMutation();
 	const [deleteFriend] = useDeleteFriendMutation();
 	const [deletePostAction] = useDeletePostMutation()
-
-	const primaryLight = search ? palette.primary.mediumLight : palette.primary.light;
-	const primaryDark = palette.primary.dark;
 	const main = search ? palette.neutral.dark : palette.neutral.mediumMain;
 	const medium = search ? palette.neutral.mediumMain : palette.neutral.medium;
 
 	const isLoading = loading || pending;
-
-	const handleSendFriendRequest = () => {
-		sendFriendRequest({ id: user._id, friendId })
-	}
-
-	const handleCancelFriendRequest = () => {
-		cancelFriendRequest({ id: user._id, friendId });
-	}
-
-	const handleAcceptFriendRequest = () => {
-		acceptFriendRequest({ id: user._id, friendId })
-	}
-
-	const handleDeleteFriendRequest = () => {
-		deleteFriend({ id: user._id, friendId });
-	}
 
 	const deletePost = (id) => {
 		setIsDeleted(true)
@@ -62,40 +56,28 @@ export const Friend = ({ friendId, name, subtitle, picturePath, isAuthor, postId
 	const getFriendStatus = () => {
 		if (user.friends?.some(friend => friend._id === friendId)) {
 			return {
-				action: () => {
-					handleDeleteFriendRequest()
-				},
-				icon: PersonRemoveOutlined,
-				tooltip: 'Delete Friend',
+				action: () => deleteFriend({ id: user._id, friendId }),
+				actionName: 'Delete Friend',
 			}
 		} else if (user.sentFriendRequests?.some(friend => friend._id === friendId)) {
 			return {
-				action: () => {
-					handleCancelFriendRequest()
-				},
-				icon: RemoveOutlined,
-				tooltip: 'Cancel Request',
+				action: () => cancelFriendRequest({ id: user._id, friendId }),
+				actionName: 'Cancel Friend Request',
 			}
 		} else if (user.receivedFriendRequests?.some(friend => friend._id === friendId)) {
 			return {
-				action: () => {
-					handleAcceptFriendRequest()
-				},
-				icon: PersonAddOutlined,
-				tooltip: 'Add to Friend'
+				action: () => acceptFriendRequest({ id: user._id, friendId }),
+				actionName: 'Add to Friend'
 			}
 		} else {
 			return {
-				action: () => {
-					handleSendFriendRequest()
-				},
-				icon: PersonAddOutlined,
-				tooltip: 'Send Request'
+				action: () => sendFriendRequest({ id: user._id, friendId }),
+				actionName: 'Send Friend Request'
 			}
 		}
 	};
 
-	const { action, reverseAction, tooltip, icon: Icon } = getFriendStatus();
+	const { action, actionName } = getFriendStatus();
 
 	const saveSearchedUser = useCallback(() => {
 		if (!search) return
@@ -111,76 +93,83 @@ export const Friend = ({ friendId, name, subtitle, picturePath, isAuthor, postId
 		return window.localStorage.setItem('searchedUsers', JSON.stringify([savedUser, ...users]))
 	}, [search])
 
+	const handleOpenMessageModal = () => {
+		setShowMessageModal(true)
+		setShowPopper(false)
+	}
+
 	const showOnline = activeUsers.includes(friendId)
 
 	return (
-		<Box display="flex" flexDirection="column" gap="1.5rem">
-			<FlexBetween>
-				<FlexBetween gap="1rem">
-					{isLoading
-						?
-						<>
-							<Skeleton variant="circular" width="55px" height="55px" />
-							<Box>
-								<Skeleton variant="text" sx={{ fontWeight: "500", fontSize: '16px' }} width="150px" />
-								<Skeleton variant="text" sx={{ fontSize: '0.75rem' }} width="100px" />
-							</Box>
-						</>
-						:
-						<>
-							<Badge variant={showOnline ? "dot" : ''} color="success" anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
-								sx={{ '& .MuiBadge-badge': { bottom: '6px', right: "3px", zIndex: 0 } }}>
-								<UserImage size="55" image={picturePath} />
-							</Badge>
-							<Box>
-								<Link to={'/profile/' + friendId}>
-									<Typography
-										color={main}
-										variant="h5"
-										fontWeight="500"
-										sx={{
-											"&:hover": {
-												color: palette.primary.light,
-												cursor: "pointer",
-											},
-										}}
-										onClick={saveSearchedUser}
-									>
-										{name}
-									</Typography>
-								</Link>
-								{postId
-									? <Link to={'post/' + postId}>
-										<Typography color={medium} fontSize="0.75rem" sx={{ "&:hover": { textDecoration: "underline", } }}>
-											{time}
+		<>
+			<Box display="flex" flexDirection="column" gap="1.5rem">
+				<FlexBetween>
+					<FlexBetween gap="1rem">
+						{isLoading
+							?
+							<>
+								<Skeleton variant="circular" width="55px" height="55px" />
+								<Box>
+									<Skeleton variant="text" sx={{ fontWeight: "500", fontSize: '16px' }} width="150px" />
+									<Skeleton variant="text" sx={{ fontSize: '0.75rem' }} width="100px" />
+								</Box>
+							</>
+							:
+							<>
+								<Badge variant={showOnline ? "dot" : ''} color="success" anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+									sx={{ '& .MuiBadge-badge': { bottom: '6px', right: "3px", zIndex: 0 } }}>
+									<UserImage size="55" image={picturePath} />
+								</Badge>
+								<Box>
+									<Link to={'/profile/' + friendId}>
+										<Typography
+											color={main}
+											variant="h5"
+											fontWeight="500"
+											sx={{
+												"&:hover": {
+													color: palette.primary.light,
+													cursor: "pointer",
+												},
+											}}
+											onClick={saveSearchedUser}
+										>
+											{name}
 										</Typography>
 									</Link>
-									: <Typography color={medium} fontSize="0.75rem">
-										{subtitle}
-									</Typography>
-								}
-							</Box>
-						</>
-					}
-				</FlexBetween>
-				{isAuthor
-					? <IconButton
-						sx={{ backgroundColor: primaryLight, p: "0.6rem" }}
-						onClick={() => deletePost(postId)}
-					>
-						<Delete sx={{ color: primaryDark }} />
+									{postId
+										? <Link to={'post/' + postId}>
+											<Typography color={medium} fontSize="0.75rem" sx={{ "&:hover": { textDecoration: "underline", } }}>
+												{time}
+											</Typography>
+										</Link>
+										: <Typography color={medium} fontSize="0.75rem">
+											{subtitle}
+										</Typography>
+									}
+								</Box>
+							</>
+						}
+					</FlexBetween>
+					<IconButton onClick={() => setShowPopper(!showPopper)} ref={popperAnchor}>
+						<MoreHoriz sx={{ color: palette.neutral.mediumMain, fontSize: '26px' }} />
 					</IconButton>
-					: friendId !== user._id &&
-					<Tooltip title={tooltip} placement="bottom">
-						<IconButton
-							sx={{ backgroundColor: primaryLight, p: "0.6rem" }}
-							onClick={() => action()}
-						>
-							<Icon />
-						</IconButton>
-					</Tooltip>
-				}
-			</FlexBetween>
-		</Box >
+					<Popper ref={popper} open={showPopper} anchorEl={popperAnchor.current} placement='bottom-end' sx={{ zIndex: '10000' }}>
+						<Box width="170px" bgcolor={palette.neutral.mediumLight} padding="7px 0" borderRadius="7px">
+							<Show condition={!isAuthor}>
+								<Box onClick={action} padding="10px" sx={{ ":hover": { bgcolor: palette.neutral.medium, cursor: 'pointer' } }}>{actionName}</Box>
+								<Box onClick={handleOpenMessageModal}
+									padding="10px" sx={{ ":hover": { bgcolor: palette.neutral.medium, cursor: 'pointer' } }}>Write a Message</Box>
+							</Show>
+							<Show condition={isAuthor}>
+								<Box onClick={() => deletePost(postId)} padding="10px" sx={{ ":hover": { bgcolor: palette.neutral.medium, cursor: 'pointer' } }}>Delete Post</Box>
+								<Box padding="10px" sx={{ ":hover": { bgcolor: palette.neutral.medium, cursor: 'pointer' } }}>Edit Post</Box>
+							</Show>
+						</Box>
+					</Popper>
+				</FlexBetween>
+			</Box >
+			<SendMessage open={showMessageModal} user={{ firstName: name, picturePath }} handleClose={() => setShowMessageModal(false)} />
+		</>
 	)
 }

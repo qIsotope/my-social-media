@@ -42,7 +42,7 @@ export default function Navbar() {
 		navigate('/')
 	}
 
-	const fullName = user.firstName + ' ' + user.lastName;
+	const name = user.firstName || '';
 
 	return (
 		<FlexBetween padding="1rem 6%" width="100%" position="fixed" zIndex="100" backgroundColor={alt}>
@@ -79,9 +79,9 @@ export default function Navbar() {
 				<IconButton>
 					<Help sx={{ fontSize: "25px", color: dark }} />
 				</IconButton>
-				<FormControl variant="standard" value={fullName}>
+				<FormControl variant="standard" value={name}>
 					<Select
-						value={fullName}
+						value={name}
 						sx={{
 							backgroundColor: neutralLight,
 							width: "150px",
@@ -95,14 +95,15 @@ export default function Navbar() {
 								backgroundColor: neutralLight,
 							},
 						}}
+						defaultValue='name'
 						input={<InputBase />}
 					>
-						<MenuItem value={fullName}>
+						<MenuItem value={name}>
 							<Link to={`/profile/${user._id}`}>
-								<Typography>{fullName}</Typography>
+								<Typography>{name}</Typography>
 							</Link>
 						</MenuItem>
-						<MenuItem onClick={logout}>Log Out</MenuItem>
+						<MenuItem value="logout" onClick={logout}>Log Out</MenuItem>
 					</Select>
 				</FormControl>
 			</FlexBetween>
