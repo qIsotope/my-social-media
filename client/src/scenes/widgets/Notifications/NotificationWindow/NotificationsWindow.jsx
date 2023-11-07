@@ -43,13 +43,15 @@ const NotificationsWindow = ({ anchorRef, open, setOpen }) => {
 	}, [])
 	const handleClickOutside = () => setOpen(false)
 	useOnClickOutside([...refs, popper, anchorRef], handleClickOutside)
+	const haveNotifications = notifications?.readed && Object.values(notifications.readed).length
+		|| notifications?.unReaded && Object.values(notifications.unReaded).length
 	return (
 		<Popper ref={popper} open={open} anchorEl={anchorRef.current} placement='bottom-start'>
 			<Box position="absolute" top="5px" left="-160px" width="450px">
 				<Box className={classes.customScrollbar} padding="1.5rem 0 0.15rem" borderTop="0.75rem" backgroundColor={palette.neutral.light} maxHeight="595px"
 					sx={{ overflowY: 'auto' }}
 				>
-					<Show condition={notifications?.length}>
+					<Show condition={haveNotifications}>
 						<Box display="flex" flexDirection="column" >
 							{notifications?.unReaded && Object.entries(notifications.unReaded).map(([key, value]) => {
 								if (value.length === 1) return <Notification key={key} {...value[0]} />
@@ -66,7 +68,7 @@ const NotificationsWindow = ({ anchorRef, open, setOpen }) => {
 						</Box>
 					</Show>
 
-					<Show condition={!notifications?.length}>
+					<Show condition={!haveNotifications}>
 						<Box p="50px" textAlign="center">
 							<Typography variant="h5">No notifications</Typography>
 						</Box>

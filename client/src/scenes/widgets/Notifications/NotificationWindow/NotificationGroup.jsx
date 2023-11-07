@@ -5,12 +5,15 @@ import React, { useState } from 'react'
 import { Link } from 'react-router-dom'
 import KeyboardArrowDownOutlinedIcon from '@mui/icons-material/KeyboardArrowDownOutlined';
 import Notification from '../../../../components/Notification'
+import Show from 'components/Show'
 
 const getText = (type, count) => {
 	if (type === 'postLike') {
 		return `liked your ${count} posts`
 	} else if (type === 'addComment') {
-		return `left comment on your ${count} posts`
+		return `left ${count} comments on your posts`
+	} else if (type === 'reply') {
+		return `replied ${count} times to your comments`
 	}
 }
 
@@ -60,15 +63,17 @@ const NotificationGroup = ({ notifications, notificationInfo, unRead, page }) =>
 								{posts.map((post, index) => (
 									<React.Fragment key={index}>
 										{index < 7 && <Link to={'post/' + post.id}>
-											<Box>
-												<img
-													style={{ objectFit: "cover", borderRadius: "3px" }}
-													width={page ? '45px' : "35px"}
-													height={page ? '45px' : "35px"}
-													alt="user"
-													src={post.post}
-												/>
-											</Box>
+											<Show condition={post.post?.length}>
+												<Box>
+													<img
+														style={{ objectFit: "cover", borderRadius: "3px" }}
+														width={page ? '45px' : "35px"}
+														height={page ? '45px' : "35px"}
+														alt="user"
+														src={post.post}
+													/>
+												</Box>
+											</Show>
 										</Link>}
 									</React.Fragment>
 								))}

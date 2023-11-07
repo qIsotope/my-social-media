@@ -61,6 +61,7 @@ export const sendFriendRequest = async (req, res) => {
 					name: user.name,
 					picturePath: user.picturePath,
 				},
+				toId: friendId,
 				type: 'sendFriendRequest'
 			})
 		}
@@ -77,7 +78,7 @@ export const acceptFriendRequest = async (req, res) => {
 		const { id, friendId } = req.body;
 		const user = await User.findById(id).populate(['friends', 'receivedFriendRequests']).exec();
 		const friend = await User.findById(friendId).populate('friends').exec();
-		const isExistingNotification = await Notification.find({ ['user.id']: id, ['fromUser.id']: friendId, type: 'acceptFriendRequest' });
+		const isExistingNotification = await Notification.find({ ['user.id']: friendId, ['fromUser.id']: id, type: 'acceptFriendRequest' });
 		user.receivedFriendRequests = user.receivedFriendRequests.filter(friend => friend._id.toString() !== friendId)
 		friend.sentFriendRequests = friend.sentFriendRequests.filter(friend => friend._id.toString() !== id)
 		user.friends.push(friend)
@@ -96,6 +97,7 @@ export const acceptFriendRequest = async (req, res) => {
 					name: user.name,
 					picturePath: user.picturePath,
 				},
+				toId: friendId,
 				type: 'acceptFriendRequest'
 			})
 		}

@@ -6,10 +6,12 @@ import {
 	Close,
 } from "@mui/icons-material";
 import UserImage from 'components/UserImage';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
+import Show from 'components/Show';
 
 export const Notification = ({ notification }) => {
 	const [showNotification, setShowNotification] = useState(!!notification)
+	const location = useLocation()
 	const timeoutRef = useRef(null);
 	const { palette } = useTheme();
 
@@ -67,16 +69,18 @@ export const Notification = ({ notification }) => {
 						</Typography>
 					</Box>
 					<Box>
-						{notification.postLink && <Link to={'/post/' + notification.postLink}>
-							<Box width="40px" height="40px">
-								<img
-									style={{ objectFit: "cover", borderRadius: "5%" }}
-									width="40px"
-									height="40px"
-									alt="user"
-									src={notification.postImagePath}
-								/>
-							</Box>
+						{notification.postLink && <Link to={location.pathname + '/post/' + notification.postLink}>
+							<Show condition={notification.postImagePath.length}>
+								<Box width="40px" height="40px">
+									<img
+										style={{ objectFit: "cover", borderRadius: "5%" }}
+										width="40px"
+										height="40px"
+										alt="user"
+										src={notification.postImagePath}
+									/>
+								</Box>
+							</Show>
 						</Link>}
 					</Box>
 				</FlexBetween>

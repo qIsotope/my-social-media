@@ -8,10 +8,12 @@ import { useOnClickOutside } from 'hooks/useOnClickOutside'
 import WidgetWrapper from 'components/WidgetWrapper'
 import { useLocation } from 'react-router-dom'
 import { useLazySearchUserByQuery } from 'state/service/userApi'
+import { useSelector } from 'react-redux'
 
 export const SearchWidget = () => {
 	const { palette } = useTheme();
 	const neutralLight = palette.neutral.light;
+	const { refs } = useSelector(state => state.auth)
 	const location = useLocation()
 	const popperAnchor = useRef(null)
 	const popper = useRef(null)
@@ -21,16 +23,16 @@ export const SearchWidget = () => {
 	const [fetchData, { data, loading }] = useLazySearchUserByQuery()
 
 	const handleClickOutside = () => setOpen(false);
-	useOnClickOutside([popper, popperAnchor], handleClickOutside)
+	useOnClickOutside([...refs, popper, popperAnchor], handleClickOutside)
 
 	useEffect(() => setOpen(false), [location.pathname])
 
 
-	const getUsers = async () => await fetchData(debauncedValue)
+	const getUsers = async (value) => await fetchData(value);
 
 	useEffect(() => {
-		if (open) {
-			getUsers()
+		if (open && debauncedValue.length) {
+			getUsers(debauncedValue)
 		}
 	}, [debauncedValue, open])
 
