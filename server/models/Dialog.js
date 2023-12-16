@@ -1,12 +1,17 @@
 import mongoose from "mongoose";
-import User from "./User.js";
 
 const DialogSchema = mongoose.Schema({
-	userId: {
+	participants: [
+		{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }
+	],
+	lastMessage: {
 		type: mongoose.Schema.Types.ObjectId,
-		ref: User,
+		ref: 'Message',
 	},
-	participants: [],
+	unReadMessagesCount: {
+		type: Number,
+		default: 0,
+	},
 },
 	{ timestamps: true })
 

@@ -7,9 +7,17 @@ const MessageSchema = mongoose.Schema({
 		type: mongoose.Schema.Types.ObjectId,
 		ref: Dialog,
 	},
-	senderId: {
+	fromUserId: {
 		type: mongoose.Schema.Types.ObjectId,
 		ref: User,
+	},
+	toUserId: {
+		type: mongoose.Schema.Types.ObjectId,
+		ref: User,
+	},
+	unRead: {
+		type: Boolean,
+		default: true,
 	},
 	text: String,
 	filePath: String,

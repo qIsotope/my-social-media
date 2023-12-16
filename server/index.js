@@ -7,7 +7,7 @@ import dotenv from "dotenv";
 import helmet from "helmet";
 import morgan from "morgan";
 import { Server } from 'socket.io'
-import { authRouter, commentsRouter, friendsRouter, notificationsRouter, postsRouter, uploadRouter, userRouter } from './routers/index.js'
+import { authRouter, commentsRouter, friendsRouter, notificationsRouter, postsRouter, uploadRouter, userRouter, messagingRouter } from './routers/index.js'
 
 /* CONFIGURATIONS */
 dotenv.config();
@@ -26,6 +26,7 @@ app.use('/friends', friendsRouter);
 app.use('/posts', postsRouter);
 app.use('/comments', commentsRouter);
 app.use('/notifications', notificationsRouter);
+app.use('/messaging', messagingRouter);
 app.use('', uploadRouter);
 
 const PORT = process.env.PORT || 6001;

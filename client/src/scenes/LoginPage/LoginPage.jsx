@@ -25,10 +25,6 @@ export default function LoginPage({ error: authError }) {
 		}
 	}, [error, success])
 
-	useEffect(() => {
-		document.title = "Login"
-	}, [])
-
 	return (
 		<Box>
 			<Box

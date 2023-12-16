@@ -100,7 +100,7 @@ const notificationApi = api.injectEndpoints({
 					}
 
 					if (targetGroupKey === null) {
-						targetGroupKey = key;
+						targetGroupKey = key; 
 						groupedNotifications[target][targetGroupKey] = [formattedNotification];
 					} else {
 						groupedNotifications[target][targetGroupKey].push(formattedNotification);
@@ -120,7 +120,6 @@ const notificationApi = api.injectEndpoints({
 				try {
 					await cacheDataLoaded
 					socket.on('notification', (body) => {
-						console.log(body)
 						dispatch(updateNotificationsCount())
 						updateCachedData((draft) => {
 							draft.notifications.push(getformattedNotification(body))

@@ -169,7 +169,9 @@ export const Friend = ({ friendId, name, subtitle, picturePath, isAuthor, postId
 					</Popper>
 				</FlexBetween>
 			</Box >
-			<SendMessage open={showMessageModal} user={{ firstName: name, picturePath }} handleClose={() => setShowMessageModal(false)} />
+			<Show condition={showMessageModal}>
+				<SendMessage open={showMessageModal} user={{ firstName: name, picturePath, id: friendId }} handleClose={() => setShowMessageModal(false)} />
+			</Show>
 		</>
 	)
 }

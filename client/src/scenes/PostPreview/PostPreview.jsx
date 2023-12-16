@@ -10,7 +10,6 @@ import { CreateCommentWidget } from 'scenes/widgets/Comments/CreateCommentWidget
 import { useLazyGetPostQuery } from 'state/service/postsApi';
 import { updateRefs } from 'state/slices/auth';
 
-
 const PostPreview = () => {
 	const { user } = useSelector(state => state.auth)
 	const { palette } = useTheme()
@@ -29,7 +28,6 @@ const PostPreview = () => {
 		if (!postId) return
 		getPost(postId)
 	}, [postId])
-
 
 	return (
 		<>
