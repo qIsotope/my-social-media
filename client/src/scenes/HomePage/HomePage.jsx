@@ -12,9 +12,6 @@ import { FriendsRequestsListWidget } from 'scenes/widgets/Friends/FriendRequests
 export default function HomePage() {
 	const { user } = useSelector(state => state.auth)
 	const { receivedFriendRequests, sentFriendRequests, friends } = user;
-	useEffect(() => {
-		document.title = "Home"
-	}, [])
 
 	return (
 		<Box>

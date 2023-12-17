@@ -67,7 +67,7 @@ export default function Navbar() {
 				<IconButton onClick={() => dispatch(setMode())}>
 					{mode === 'light' ? <LightMode sx={{ fontSize: "25px", color: dark }} /> : <DarkMode ssx={{ fontSize: "25px", color: dark }} />}
 				</IconButton>
-				<IconButton>
+				<IconButton onClick={() => navigate('/messaging')}>
 					<Message sx={{ fontSize: "25px", color: dark }} />
 				</IconButton>
 				<IconButton onClick={() => setOpen(!open)} ref={notificationIcon}>

@@ -23,18 +23,14 @@ const NotificationPage = () => {
 		}
 	}, [user])
 
-	useEffect(() => {
-		document.title = 'Notifications'
-	}, [])
-
 	const filterOptionsLabels = [ALL_NOTIFICATIONS, FROM_FRIENDS, COMMENTS_REPLIES];
-	const mappinFilterOptionsToHandlers = {
+	const mappingFilterOptionsToHandlers = {
 		[ALL_NOTIFICATIONS]: (value) => value,
 		[FROM_FRIENDS]: (value) => user.friends.some((friend) => friend._id === value[0].linkUserId),
 		[COMMENTS_REPLIES]: (value) => value[0].type === ADD_COMMENT || value[0].type === REPLY,
 	};
 	const filteredNotifications = useMemo(() => notifications && [...Object.values(notifications?.readed), ...Object.values(notifications?.unReaded)]
-		.filter(mappinFilterOptionsToHandlers[filterOptionsLabels[activeOption]]), [activeOption, notifications]);
+		.filter(mappingFilterOptionsToHandlers[filterOptionsLabels[activeOption]]), [activeOption, notifications]);
 
 	return (
 		<Box>

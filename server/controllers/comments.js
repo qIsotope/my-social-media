@@ -1,8 +1,6 @@
 import Comment from "../models/Comment.js";
 import Post from "../models/Post.js";
 import User from "../models/User.js";
-import Notification from "../models/Notification.js";
-import { activeUsers, io } from '../index.js'
 import { sendNotification } from "../utils/createNotification.js";
 
 export const addRemoveLike = async (req, res) => {

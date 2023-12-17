@@ -16,6 +16,8 @@ import Show from 'components/Show';
 import PostPreview from 'scenes/PostPreview/PostPreview';
 import Navbar from 'scenes/Navbar/Navbar';
 import NotificationPage from 'scenes/NotificationPage/NotificationPage';
+import MessagingPage from 'scenes/MessagingPage/MessagingPage';
+import DialogPage from 'scenes/DialogPage/DialogPage';
 
 function App() {
 	const { mode, user } = useSelector(state => state.auth)
@@ -38,6 +40,13 @@ function App() {
 		if (error) navigate('/')
 	}, [user, error])
 
+	useEffect(() => {
+		const pageTitle = location.pathname.split('/')[1]
+		if (pageTitle !== 'profile') {
+			document.title = pageTitle.charAt(0).toUpperCase() + pageTitle.slice(1);
+		}
+	}, [location.pathname])
+
 	return (
 		<div className="app">
 			<ThemeProvider theme={theme}>
@@ -48,6 +57,8 @@ function App() {
 					<Route path="/home/post?/:postPreviewId?" element={<HomePage />} />
 					<Route path="/profile/:id/post?/:postPreviewId?" element={<ProfilePage />} />
 					<Route path="/notifications/post?/:postPreviewId?" element={<NotificationPage />} />
+					<Route path="/messaging/post?/:postPreviewId?" element={<MessagingPage />} />
+					<Route path="/dialogs/:dialogId" element={<DialogPage />} />
 				</Routes>
 				<NotificationsStreamWidget />
 				<PostPreview />

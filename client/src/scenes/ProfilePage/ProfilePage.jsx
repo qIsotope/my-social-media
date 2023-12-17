@@ -1,13 +1,11 @@
 import { Box, useMediaQuery } from "@mui/material";
-import { useEffect, useState } from "react";
-import { useSelector, useDispatch } from "react-redux";
+import { useEffect } from "react";
+import { useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
-import Navbar from "scenes/Navbar/Navbar";
 import { FriendsListWidget } from "scenes/widgets/Friends/FriendsListWidget";
 import { PostsWidget } from "scenes/widgets/Posts/PostsWidget";
 import UserWidget from "scenes/widgets/User/UserWidget";
 import { useGetUserProfileQuery } from "state/service/userApi";
-import { getUserProfile } from "state/slices/auth";
 
 const ProfilePage = () => {
 	const { id } = useParams();
