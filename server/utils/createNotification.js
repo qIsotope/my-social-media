@@ -1,8 +1,8 @@
 import Notification from '../models/Notification.js'
 import { activeUsers, io } from '../index.js'
 
-export const sendNotification = async ({ user, fromUser, post, comment, type, toId }) => {
-	const notification = new Notification({
+export const sendNotification = async ({ user, fromUser, post, comment, type, toId, message }) => {
+	const notification = {
 		user: {
 			id: user.id,
 			name: user.name,
@@ -22,8 +22,17 @@ export const sendNotification = async ({ user, fromUser, post, comment, type, to
 			id: post?.id,
 			picturePath: post?.picturePath,
 		},
+		message: {
+			id: message?.id,
+			dialogId: message?.dialogId,
+			text: message?.text,
+		},
 		type: type
-	})
-	const savedNotification = await notification.save()
-	io.to(activeUsers[toId]).emit('notification', savedNotification)
+	}
+	let savedNotification = notification
+	if (type !== 'message') {
+		const storedNotification = new Notification(notification)
+		savedNotification = await storedNotification.save()
+	}
+	io.to(activeUsers[toId]?.[0]).emit('notification', savedNotification)
 }

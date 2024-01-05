@@ -3,11 +3,21 @@ import bodyParser from "body-parser";
 import mongoose from "mongoose";
 import cors from "cors";
 import dotenv from "dotenv";
+import cookieParser from "cookie-parser";
 
 import helmet from "helmet";
 import morgan from "morgan";
 import { Server } from 'socket.io'
-import { authRouter, commentsRouter, friendsRouter, notificationsRouter, postsRouter, uploadRouter, userRouter, messagingRouter } from './routers/index.js'
+import {
+	authRouter,
+	commentsRouter,
+	friendsRouter,
+	notificationsRouter,
+	postsRouter,
+	uploadRouter,
+	userRouter,
+	messagingRouter
+} from './routers/index.js'
 
 /* CONFIGURATIONS */
 dotenv.config();
@@ -18,7 +28,8 @@ app.use(helmet.crossOriginResourcePolicy({ policy: "cross-origin" }));
 // app.use(morgan("common"));
 app.use(bodyParser.json({ limit: "30mb", extended: true }));
 app.use(bodyParser.urlencoded({ limit: "30mb", extended: true }));
-app.use(cors());
+app.use(cors({ origin: 'http://localhost:3006', credentials: true }));
+app.use(cookieParser());
 
 app.use('/auth', authRouter);
 app.use('/users', userRouter);
@@ -42,12 +53,17 @@ export const io = new Server(server, {
 export const activeUsers = {};
 io.on('connection', (socket) => {
 	socket.on('add-user', (userId) => {
-		activeUsers[userId] = socket.id
+		if (activeUsers[userId] && !activeUsers[userId].includes(socket.id)) {
+			activeUsers[userId].push(socket.id)
+		} else {
+			activeUsers[userId] = [socket.id]
+		}
 		io.emit("get-users", Object.keys(activeUsers));
 	});
 
+
 	socket.on("disconnect", () => {
-		const userId = Object.keys(activeUsers).find((userId) => activeUsers[userId] === socket.id)
+		const userId = Object.keys(activeUsers).find((userId) => activeUsers[userId].includes(socket.id));
 		if (userId) {
 			delete activeUsers[userId];
 			io.emit('get-users', Object.keys(activeUsers));

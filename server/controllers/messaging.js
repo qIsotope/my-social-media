@@ -2,6 +2,7 @@ import Message from '../models/Message.js';
 import Dialog from '../models/Dialog.js';
 import User from '../models/User.js';
 import { activeUsers, io } from '../index.js'
+import { sendNotification } from '../utils/createNotification.js';
 
 export const getMessages = async (req, res) => {
 	try {
@@ -9,9 +10,33 @@ export const getMessages = async (req, res) => {
 		const { id: userId } = req.id;
 		const dialog = await Dialog.findById(id).populate('participants', ['_id', 'picturePath', 'name']).exec();
 		const [participant] = dialog.participants.filter(participant => participant._id.toString() !== userId);
-		const messages = await Message.find({ dialogId: id, unRead: false }).sort({ createdAt: -1 }).limit(limit).populate('fromUserId', ['_id', 'picturePath', 'firstName']).exec();
+		const messages = await Message.find({ dialogId: id, unRead: false, isDeletedFor: { $nin: [userId] } }).sort({ createdAt: -1 }).limit(limit).populate([
+			{
+				path: 'fromUserId',
+				select: ['_id', 'picturePath', 'firstName'],
+			},
+			{
+				path: 'forwardedMessages',
+				populate: {
+					path: 'fromUserId',
+					select: ['_id', 'picturePath', 'firstName'],
+				},
+			},
+		]).exec();
 		const messagesCount = await Message.find({ dialogId: id }).countDocuments();
-		const unreadedMessages = await Message.find({ dialogId: id, unRead: true }).populate('fromUserId', ['_id', 'picturePath', 'firstName']).exec();
+		const unreadedMessages = await Message.find({ dialogId: id, unRead: true, isDeletedFor: { $nin: [userId] } }).populate([
+			{
+				path: 'fromUserId',
+				select: ['_id', 'picturePath', 'firstName'],
+			},
+			{
+				path: 'forwardedMessages',
+				populate: {
+					path: 'fromUserId',
+					select: ['_id', 'picturePath', 'firstName'],
+				},
+			},
+		]).exec();
 		messages.reverse();
 		res.status(200).json({ messages: [...messages, ...unreadedMessages], participant, messagesCount });
 	} catch (err) {
@@ -21,83 +46,100 @@ export const getMessages = async (req, res) => {
 
 export const getDialogs = async (req, res) => {
 	try {
-		const { id } = req.id;
-		const dialogs = await Dialog.find({ participants: { $in: [id] } }).sort({ 'updatedAt': -1 }).populate(['lastMessage', 'participants']).exec();
+		const { id } = req.params;
+		const dialogs = await Dialog.find({ participants: { $in: [id] } })
+			.populate(['lastMessage', 'participants'])
+			.lean()
+			.exec();
+		dialogs.sort((a, b) => (a.lastMessage?.createdAt < b.lastMessage?.createdAt ? 1 : -1));
 		const promises = [];
+		const updatedDialogs = await Promise.all(
+			dialogs.map(async (dialog) => {
+				const lastMessage = await Message.findOne({
+					dialogId: dialog._id,
+					isDeletedFor: { $nin: [id] },
+				})
+					.sort({ createdAt: -1 })
+					.populate('fromUserId', ['_id', 'picturePath', 'name'])
+					.lean()
+					.exec();
+				dialog.lastMessage = lastMessage;
+				await Dialog.updateOne({ _id: dialog._id }, dialog);
+				return dialog;
+			})
+		);
 		dialogs.forEach(dialog => {
 			promises.push(Message.find({ dialogId: dialog._id, unRead: true, toUserId: id }).countDocuments());
 		});
-		const unReadMessages = await Promise.all(promises);
-		res.status(200).json({ dialogs, unReadMessages: unReadMessages.flat() });
+
+		const unReadCount = await Promise.all(promises);
+
+		res.status(200).json({ dialogs: updatedDialogs, unReadMessages: unReadCount });
 	} catch (err) {
-		res.status(404).json({ message: err.message });
+		res.status(500).json({ message: err.message });
 	}
-}
+};
 
 export const sendMessage = async (req, res) => {
 	try {
-		const { toUserId, fromUserId, text, filePath } = req.body;
-		const dialog = await Dialog.find({ participants: { $size: 2, $all: [fromUserId, toUserId] } });
+		const { toUserId, fromUserId, text, filePath, dialogId, forwardedMessages = [], attachments } = req.body;
 		const fromUser = await User.findById(fromUserId);
-
 		const message = new Message({
+			attachments,
 			fromUserId,
 			toUserId,
 			text,
 			filePath,
+			dialogId,
+			forwardedMessages: forwardedMessages.map(messages => messages.id),
 		});
 
-		let dialogId;
-		if (dialog.length) {
-			dialogId = dialog[0]._id;
-			dialog[0].lastMessage = message._id;
-			await dialog[0].save();
-		} else {
-			const newDialog = new Dialog({
-				participants: [toUserId, fromUserId],
-			});
-			newDialog.lastMessage = message._id;
-			const savedDialog = await newDialog.save();
-			dialogId = savedDialog._id;
-		}
-
-		message.dialogId = dialogId;
 		const savedMessage = await message.save();
 		const { _id, picturePath, firstName } = fromUser;
-		const { _id: saved_id, toUserId: savedToUserId, text: savedText, filepath: savedFilePath, createdAt: savedCreatedAt, unRead: savedUnRead } = savedMessage;
 		const updatedMessage = {
-			_id: saved_id,
+			_id: savedMessage._id,
 			fromUserId: {
 				_id,
 				picturePath,
 				firstName,
 			},
-			toUserId: savedToUserId,
-			text: savedText,
-			filePath: savedFilePath,
-			createdAt: savedCreatedAt,
-			dialogId,
-			unRead: savedUnRead,
+			attachments: savedMessage.attachments,
+			toUserId: savedMessage.toUserId,
+			text: savedMessage.text,
+			filePath: savedMessage.filePath,
+			createdAt: savedMessage.createdAt,
+			dialogId: savedMessage.dialogId,
+			unRead: savedMessage.unRead,
+			forwardedMessages,
+			isDeletedFor: savedMessage.isDeletedFor,
 		};
 
-		io.to(activeUsers[toUserId]).emit('getMessage', updatedMessage);
+		sendNotification({
+			user: {
+				id: toUserId,
+			},
+			fromUser: {
+				id: fromUserId,
+				name: firstName,
+				picturePath: fromUser.picturePath,
+			},
+			type: 'message',
+			message: {
+				dialogId,
+				id: savedMessage._id,
+				text: savedMessage.text,
+			},
+			toId: toUserId,
+		});
+
+		activeUsers[toUserId]?.forEach(socketId => {
+			io.to(socketId).emit('getMessage', updatedMessage);
+		});
+		activeUsers[fromUserId]?.forEach(socketId => {
+			io.to(socketId).emit('getMessage', updatedMessage);
+		});
 
 		res.status(200).json(updatedMessage);
-	} catch (err) {
-		res.status(404).json({ message: err.message });
-	}
-}
-
-export const createDialog = async (req, res) => {
-	try {
-		const { userId, participants } = req.body;
-		const dialog = new Dialog({
-			userId,
-			participants,
-		});
-		const savedDialog = await dialog.save();
-
-		res.status(200).json(savedDialog);
 	} catch (err) {
 		res.status(404).json({ message: err.message });
 	}
@@ -120,9 +162,32 @@ export const markMessageAsRead = async (req, res) => {
 			$set: { unRead: false },
 		})
 		const fromUserId = unReadedMessages[0].fromUserId;
-		io.to(activeUsers[fromUserId]).emit('readMessages', viewedMessages);
+		activeUsers[fromUserId]?.forEach(socketId => {
+			io.to(socketId).emit('readMessages', viewedMessages);
+		});
 		res.status(200).json(viewedMessages);
 	} catch (err) {
 		res.status(404).json({ message: err.message });
 	}
+}
+
+export const deleteRestoreMessages = async (req, res) => {
+	try {
+		const { messageIds } = req.body;
+		const { id: userId } = req.id;
+		const messages = await Message.find({ _id: { $in: messageIds } });
+		messages.forEach(async message => {
+			if (message.isDeletedFor.includes(userId)) {
+				message.isDeletedFor = message.isDeletedFor.filter(id => id.toString() !== userId);
+			} else {
+				message.isDeletedFor.push(userId);
+			}
+			await message.save();
+		});
+
+		res.status(200).json(messages);
+	} catch (error) {
+		res.status(404).json({ message: error.message });
+	}
+
 }

@@ -57,6 +57,7 @@ const CreatePostWidget = () => {
 			const formData = new FormData();
 			formData.append('image', picture);
 			formData.append('path', path);
+			formData.append('type', picture.type);
 			uploadImage(formData)
 		}
 	};

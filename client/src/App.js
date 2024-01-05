@@ -1,8 +1,8 @@
 import React, { useEffect } from 'react';
 import { Routes, Route, useLocation } from 'react-router-dom'
-import HomePage from 'scenes/HomePage/HomePage';
-import LoginPage from 'scenes/LoginPage/LoginPage';
-import ProfilePage from 'scenes/ProfilePage/ProfilePage';
+import HomePage from 'pages/HomePage/HomePage';
+import LoginPage from 'pages/LoginPage/LoginPage';
+import ProfilePage from 'pages/ProfilePage/ProfilePage';
 import { useMemo } from "react";
 import { CssBaseline, ThemeProvider } from "@mui/material";
 import { createTheme } from "@mui/material/styles";
@@ -10,14 +10,14 @@ import { themeSettings } from "./theme";
 import { useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom';
 import { useAuthMeQuery } from 'state/service/userApi'
-import { NotificationsStreamWidget } from 'scenes/widgets/Notifications/NotificationStream/NotificationsStreamWidget';
+import { NotificationsStreamWidget } from 'widgets/Notifications/NotificationStream/NotificationsStream';
 import { socket } from 'socket';
 import Show from 'components/Show';
-import PostPreview from 'scenes/PostPreview/PostPreview';
-import Navbar from 'scenes/Navbar/Navbar';
-import NotificationPage from 'scenes/NotificationPage/NotificationPage';
-import MessagingPage from 'scenes/MessagingPage/MessagingPage';
-import DialogPage from 'scenes/DialogPage/DialogPage';
+import PostPreview from 'pages/PostPreview/PostPreview';
+import Navbar from 'widgets/Navbar/Navbar';
+import NotificationPage from 'pages/NotificationPage/NotificationPage';
+import MessagingPage from 'pages/MessagingPage/MessagingPage';
+import DialogPage from 'pages/DialogPage/DialogPage';
 
 function App() {
 	const { mode, user } = useSelector(state => state.auth)
