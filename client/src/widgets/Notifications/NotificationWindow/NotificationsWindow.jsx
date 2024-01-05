@@ -3,7 +3,7 @@ import { useOnClickOutside } from 'hooks/useOnClickOutside';
 import React, { useEffect, useRef } from 'react'
 import { useSelector } from 'react-redux';
 import { useLazyGetNotificationsQuery } from 'state/service/notificationApi';
-import Notification from '../../../../components/Notification';
+import Notification from 'components/Notification';
 import NotificationGroup from './NotificationGroup';
 import { makeStyles } from "@mui/styles";
 import { Link } from 'react-router-dom';

@@ -58,7 +58,7 @@ export const sendFriendRequest = async (req, res) => {
 				},
 				fromUser: {
 					id,
-					name: user.name,
+					name: user.firstName,
 					picturePath: user.picturePath,
 				},
 				toId: friendId,
@@ -94,7 +94,7 @@ export const acceptFriendRequest = async (req, res) => {
 				},
 				fromUser: {
 					id,
-					name: user.name,
+					name: user.firstName,
 					picturePath: user.picturePath,
 				},
 				toId: friendId,

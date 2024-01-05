@@ -1,4 +1,4 @@
-import { Button, Dialog, DialogActions, DialogContentText } from '@mui/material'
+import { Dialog, DialogContentText } from '@mui/material'
 import React from 'react'
 
 export const ImageModal = ({ open, handleClose, imageUrl }) => {

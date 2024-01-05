@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo } from 'react'
-import { PostWidget } from './PostWidget';
+import { PostWidget } from './Post';
 import { useParams } from "react-router-dom";
 import { useLazyGetPostsQuery } from 'state/service/postsApi';
 import { useDispatch, useSelector } from 'react-redux';

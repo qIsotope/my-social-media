@@ -55,6 +55,7 @@ export const themeSettings = (mode) => {
               default: colorTokens.grey[900],
               alt: colorTokens.grey[800],
               light: colorTokens.grey[700],
+              mediumLight: colorTokens.grey[600],
             },
           }
         : {
@@ -77,6 +78,7 @@ export const themeSettings = (mode) => {
               default: colorTokens.grey[10],
               alt: colorTokens.grey[0],
 							light: colorTokens.grey[100],
+							mediumLight: colorTokens.grey[200],
             },
           }),
     },

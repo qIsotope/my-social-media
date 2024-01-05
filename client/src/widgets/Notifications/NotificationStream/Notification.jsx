@@ -19,7 +19,7 @@ export const Notification = ({ notification }) => {
 		if (notification) {
 			timeoutRef.current = setTimeout(() => {
 				setShowNotification(null)
-			}, 10000);
+			}, 120000);
 		}
 		return () => clearInterval(timeoutRef.current)
 	}, [notification])
@@ -31,14 +31,17 @@ export const Notification = ({ notification }) => {
 	const handleMouseLeave = () => {
 		timeoutRef.current = setTimeout(() => {
 			setShowNotification(false)
-		}, 2000);
+		}, 22000);
 	}
 
 	return (
 		<>
-			{showNotification && <WidgetWrapper
-				sx={{ visibility: showNotification ? 'visible' : 'hidden' }
+			{showNotification && <Box
+				sx={{ visibility: showNotification ? 'visible' : 'visible' }
 				}
+				padding="1.2rem 1rem 0.75rem 1rem"
+				backgroundColor={palette.background.alt}
+				borderRadius="0.75rem"
 				onMouseEnter={handleMouseEnter}
 				onMouseLeave={handleMouseLeave}
 				mb="20px"
@@ -52,25 +55,23 @@ export const Notification = ({ notification }) => {
 						<Link to={'/profile/' + notification?.linkUserId}>
 							<UserImage image={notification?.userImagePath} size='40px' />
 						</Link>
-						<Typography>
+						<Box>
 							<Typography
-								sx={{
-									"&:hover": {
-										color: palette.neutral.mediumMain,
-										cursor: "pointer",
-										textDecoration: 'underline',
-									}
-								}
-								}
+								color={palette.neutral.medium} sx={{ fontSize: '14px', fontWeight: '500', '&:hover': { textDecoration: 'underline' } }}
 							>
 								<Link to={'/profile/' + notification?.linkUserId}>{notification?.name + ' '}</Link>
 							</Typography>
+							<Typography color={palette.neutral.mediumMain} pt="3px">
+								{notification.content}
+							</Typography>
+						</Box>
+						<Typography color={palette.neutral.main} ml="-15px">
 							{notification?.text}
 						</Typography>
 					</Box>
 					<Box>
 						{notification.postLink && <Link to={location.pathname + '/post/' + notification.postLink}>
-							<Show condition={notification.postImagePath.length}>
+							<Show condition={notification.postImagePath?.length}>
 								<Box width="40px" height="40px">
 									<img
 										style={{ objectFit: "cover", borderRadius: "5%" }}
@@ -84,7 +85,7 @@ export const Notification = ({ notification }) => {
 						</Link>}
 					</Box>
 				</FlexBetween>
-			</WidgetWrapper>}
+			</Box>}
 		</>
 	)
 }

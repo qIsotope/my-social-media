@@ -56,7 +56,7 @@ export const createComment = async (req, res) => {
 					},
 					fromUser: {
 						id: user._id,
-						name: user.name,
+						name: user.firstName,
 						picturePath: user.picturePath,
 					},
 					post: {
@@ -82,7 +82,7 @@ export const createComment = async (req, res) => {
 					},
 					fromUser: {
 						id: user._id,
-						name: user.name,
+						name: user.firstName,
 						picturePath: user.picturePath,
 					},
 					comment: {

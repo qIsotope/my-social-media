@@ -90,7 +90,7 @@ export const addRemoveLike = async (req, res) => {
 			post.likes = post.likes.filter(like => like._id.toString() !== id)
 		} else {
 			post.likes.push(user)
-			if (!isExistingNotification.length) {
+			if (!isExistingNotification.length && id !== post.userId) {
 				sendNotification({
 					user: {
 						id: post.userId,
@@ -99,7 +99,7 @@ export const addRemoveLike = async (req, res) => {
 					},
 					fromUser: {
 						id: user._id,
-						name: user.name,
+						name: user.firstName,
 						picturePath: user.picturePath,
 					},
 					post: {

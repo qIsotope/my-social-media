@@ -1,6 +1,11 @@
 import { updateNotificationsCount } from 'state/slices/auth';
 import { api } from './api'
 import { socket } from 'socket';
+import { Howl, Howler } from 'howler';
+import notificationSound from 'sounds/notification.mp3'
+import messageSound from 'sounds/message.mp3'
+Howler.autoUnlock = false;
+
 
 
 const getformattedNotification = (notification) => {
@@ -55,6 +60,14 @@ const getformattedNotification = (notification) => {
 				content: notification.comment.text,
 				repliedToId: notification.comment.repliedToId
 			}
+		case 'message':
+			return {
+				...baseFormattedNotification,
+				title: 'New Message!',
+				text: 'sent you a message',
+				postLink: notification.message.dialogId,
+				content: notification.message.text
+			}
 		default:
 			return notification;
 	}
@@ -100,7 +113,7 @@ const notificationApi = api.injectEndpoints({
 					}
 
 					if (targetGroupKey === null) {
-						targetGroupKey = key; 
+						targetGroupKey = key;
 						groupedNotifications[target][targetGroupKey] = [formattedNotification];
 					} else {
 						groupedNotifications[target][targetGroupKey].push(formattedNotification);
@@ -119,8 +132,32 @@ const notificationApi = api.injectEndpoints({
 			) {
 				try {
 					await cacheDataLoaded
+
 					socket.on('notification', (body) => {
-						dispatch(updateNotificationsCount())
+						if (body.type === 'message') {
+							const audio = new Howl({
+								src: [messageSound],
+								autoplay: true,
+								volume: 1.0,
+								onplayerror: function () {
+									audio.once('unlock', function () {
+										audio.play();
+									});
+								},
+							})
+						} else {
+							const audio = new Howl({
+								src: [notificationSound],
+								autoplay: true,
+								volume: 1.0,
+								onplayerror: function () {
+									audio.once('unlock', function () {
+										audio.play();
+									});
+								},
+							})
+							dispatch(updateNotificationsCount())
+						}
 						updateCachedData((draft) => {
 							draft.notifications.push(getformattedNotification(body))
 						})

@@ -4,7 +4,7 @@ import moment from 'moment'
 import React, { useState } from 'react'
 import { Link } from 'react-router-dom'
 import KeyboardArrowDownOutlinedIcon from '@mui/icons-material/KeyboardArrowDownOutlined';
-import Notification from '../../../../components/Notification'
+import Notification from 'components/Notification'
 import Show from 'components/Show'
 
 const getText = (type, count) => {
