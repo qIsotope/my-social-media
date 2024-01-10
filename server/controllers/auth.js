@@ -10,6 +10,8 @@ import { ref, uploadBytesResumable, getDownloadURL } from 'firebase/storage'
 export const authMe = async (req, res) => {
 	try {
 		const { id } = req.id;
+		const { refreshToken } = req.cookies;
+		console.log(req.cookies);
 		const user = await User.findById(id).populate(['friends', 'sentFriendRequests', 'receivedFriendRequests']).exec();
 		const notificationsCount = await Notification.countDocuments({ ['user.id']: id, unRead: true });
 		const userPosts = await Post.find({ userId: id, isDeleted: false });
@@ -37,7 +39,6 @@ export const register = async (req, res) => {
 		const salt = await bcrypt.genSalt();
 		const passwordHash = await bcrypt.hash(password, salt);
 		if (req.file?.buffer) {
-			console.log(req.file);
 			const path = `users/${req.file?.originalname}.${v4()}`
 			const imageRef = ref(storage, path);
 			const uploadTask = await uploadBytesResumable(imageRef, req.file?.buffer, { contentType: req.file.mimetype });
@@ -57,7 +58,7 @@ export const register = async (req, res) => {
 		})
 		const savedUser = await user.save();
 
-		res.status(201).json(user);
+		res.status(201).json(savedUser);
 	} catch (error) {
 		if (error.code === 11000) {
 			res.status(405).json({ error: error.message });
@@ -77,6 +78,8 @@ export const login = async (req, res) => {
 
 		const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET);
 		delete user.password;
+		res.cookie('refreshToken', token, { httpOnly: true, maxAge: 30 * 24 * 60 * 60 * 1000});
+		console.log(res)
 		return res.status(200).json({ token, user });
 	} catch (err) {
 		return res.status(500).json({ error: err.message });

@@ -10,7 +10,7 @@ const Dialog = ({ participants, lastMessage, _id, updatedAt, unReadMessages }) =
 	const { user } = useSelector(state => state.auth)
 	const dialogUser = participants.filter(participant => participant._id !== user._id)[0]
 	const { palette } = useTheme();
-	const formattedDate = `${moment(updatedAt).format('DD MMM')} at ${moment(updatedAt).format('LT')}`
+	const formattedDate = `${moment(lastMessage.createdAt).format('DD MMM')} at ${moment(lastMessage.updatedAt).format('LT')}`
 	return (
 		<Box key={_id}>
 			<Link to={'/dialogs/' + _id}>
@@ -45,6 +45,11 @@ const Dialog = ({ participants, lastMessage, _id, updatedAt, unReadMessages }) =
 									sx={{ color: palette.neutral.mediumMain, fontSize: '14px', fontWeight: '500' }}
 								>
 									{lastMessage.text}
+									<Show condition={lastMessage.attachments?.length}>
+										<Box sx={{ color: palette.neutral.medium, fontSize: '14px', fontWeight: '400' }}>
+											{lastMessage.attachments?.length} attachment
+										</Box>
+									</Show>
 								</Box>
 							</Box>
 						</Box>

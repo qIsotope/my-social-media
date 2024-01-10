@@ -3,14 +3,14 @@ import { ref, uploadBytesResumable, getDownloadURL } from 'firebase/storage'
 
 export const uploadImage = async (req, res) => {
 	try {
-		const { path } = req.body;
+		const { path, type, name, duration } = req.body;
 		if (!req.file?.buffer) {
 			return res.status(400).json({ message: 'No image uploaded' });
 		}
 		const metadata = {
 			contentType: req.file.mimetype,
 		};
-		const imageRef = ref(storage, path);
+		const imageRef = ref(storage, path + '.' + type);
 		const uploadTask = uploadBytesResumable(imageRef, req.file?.buffer, metadata);
 		uploadTask.on('state_changed',
 			() => {},
@@ -19,7 +19,7 @@ export const uploadImage = async (req, res) => {
 			},
 			() => {
 				getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
-					return res.status(200).json({ url: downloadURL });
+					return res.status(200).json({ url: downloadURL, type, name, duration });
 				});
 			})
 	} catch (error) {
